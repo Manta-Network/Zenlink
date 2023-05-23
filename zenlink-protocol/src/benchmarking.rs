@@ -16,7 +16,9 @@ const ASSET_0: AssetId = AssetId { chain_id: 2001, asset_type: 2, asset_index: 8
 
 const ASSET_1: AssetId = AssetId { chain_id: 2001, asset_type: 2, asset_index: 9 };
 
-const ASSET_2: AssetId = AssetId { chain_id: 2001, asset_type: 2, asset_index: 518 };
+// 10 is reserved to LP Assset0 + Assset1
+
+const ASSET_2: AssetId = AssetId { chain_id: 2001, asset_type: 2, asset_index: 11 };
 
 pub fn lookup_of_account<T: Config>(
 	who: T::AccountId,
