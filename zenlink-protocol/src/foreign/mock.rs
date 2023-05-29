@@ -11,7 +11,7 @@ use sp_runtime::{
 
 use crate as pallet_zenlink;
 pub use crate::{
-	AssetId, AssetIdConverter, Config, MultiAssetsHandler, PairLpGenerate, Pallet, ParaId,
+	AssetId, Config, MultiAssetsHandler, PairLpGenerate, Pallet,
 	ZenlinkMultiAssets, LIQUIDITY, LOCAL, NATIVE, RESERVED,
 };
 
@@ -83,11 +83,7 @@ impl Config for Test {
 	type PalletId = ZenlinkPalletId;
 	type AssetId = AssetId;
 	type LpGenerate = PairLpGenerate<Self>;
-	type TargetChains = ();
 	type SelfParaId = ();
-	type XcmExecutor = ();
-	type AccountIdConverter = ();
-	type AssetIdConverter = AssetIdConverter;
 	type WeightInfo = ();
 }
 
