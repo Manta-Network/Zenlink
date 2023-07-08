@@ -20,12 +20,6 @@ const ASSET_1: AssetId = AssetId { chain_id: 2001, asset_type: 2, asset_index: 9
 
 const ASSET_2: AssetId = AssetId { chain_id: 2001, asset_type: 2, asset_index: 11 };
 
-pub fn lookup_of_account<T: Config>(
-	who: T::AccountId,
-) -> <<T as frame_system::Config>::Lookup as StaticLookup>::Source {
-	<T as frame_system::Config>::Lookup::unlookup(who)
-}
-
 fn run_to_block<T: Config>(n: u32) {
 	type System<T> = frame_system::Pallet<T>;
 
@@ -42,7 +36,7 @@ benchmarks! {
 
 	set_fee_receiver{
 		let caller: T::AccountId = whitelisted_caller();
-	}:_(RawOrigin::Root, lookup_of_account::<T>(caller.clone()).into())
+	}:_(RawOrigin::Root, caller)
 
 	set_fee_point{
 
@@ -123,7 +117,7 @@ benchmarks! {
 			ASSET_1.into(),
 		));
 
-	}:_(RawOrigin::Signed(caller.clone()), lookup_of_account::<T>(caller.clone()), ASSET_0.into(), ASSET_1.into(), 120u128.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), caller, ASSET_0.into(), ASSET_1.into(), 120u128.saturated_into())
 
 	bootstrap_end{
 		let caller: T::AccountId = whitelisted_caller();
@@ -220,7 +214,7 @@ benchmarks! {
 
 		assert_ok!(ZenlinkPallet::<T>::create_pair((RawOrigin::Root).into(), ASSET_0.into(), ASSET_1.into()));
 
-		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), lookup_of_account::<T>(caller.clone()).into()));
+		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller));
 
 	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 10 * UNIT, 10* UNIT, 0,0, 100u32.saturated_into())
 
@@ -231,7 +225,7 @@ benchmarks! {
 
 		assert_ok!(ZenlinkPallet::<T>::create_pair((RawOrigin::Root).into(), ASSET_0.into(), ASSET_1.into()));
 
-		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), lookup_of_account::<T>(caller.clone()).into()));
+		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller));
 
 		assert_ok!(ZenlinkPallet::<T>::add_liquidity(
 			RawOrigin::Signed(caller.clone()).into(),
@@ -243,7 +237,7 @@ benchmarks! {
 			0,
 			100u32.saturated_into()));
 
-	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 1 * UNIT, 0, 0, lookup_of_account::<T>(caller.clone()).into(), 100u32.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 1 * UNIT, 0, 0, caller, 100u32.saturated_into())
 
 	swap_exact_assets_for_assets{
 		let caller: T::AccountId = whitelisted_caller();
@@ -276,7 +270,7 @@ benchmarks! {
 
 		let path: Vec<T::AssetId> = vec![ASSET_0.into(), ASSET_1.into(), ASSET_2.into()];
 
-	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 0,path, lookup_of_account::<T>(caller.clone()).into(), 100u32.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 0,path, caller, 100u32.saturated_into())
 
 	swap_assets_for_exact_assets{
 		let caller: T::AccountId = whitelisted_caller();
@@ -308,5 +302,5 @@ benchmarks! {
 			100u32.saturated_into()));
 
 		let path: Vec<T::AssetId> = vec![ASSET_0.into(), ASSET_1.into(), ASSET_2.into()];
-	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 10*UNIT,path, lookup_of_account::<T>(caller.clone()).into(), 100u32.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 10*UNIT,path, caller, 100u32.saturated_into())
 }
