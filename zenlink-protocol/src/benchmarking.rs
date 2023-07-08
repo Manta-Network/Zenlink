@@ -214,7 +214,7 @@ benchmarks! {
 
 		assert_ok!(ZenlinkPallet::<T>::create_pair((RawOrigin::Root).into(), ASSET_0.into(), ASSET_1.into()));
 
-		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller));
+		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller.into()));
 
 	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 10 * UNIT, 10* UNIT, 0,0, 100u32.saturated_into())
 
@@ -225,7 +225,7 @@ benchmarks! {
 
 		assert_ok!(ZenlinkPallet::<T>::create_pair((RawOrigin::Root).into(), ASSET_0.into(), ASSET_1.into()));
 
-		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller));
+		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller.into()));
 
 		assert_ok!(ZenlinkPallet::<T>::add_liquidity(
 			RawOrigin::Signed(caller.clone()).into(),
