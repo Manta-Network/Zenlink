@@ -11,8 +11,8 @@ use sp_runtime::{
 
 use crate as pallet_zenlink;
 pub use crate::{
-	AssetId, Config, MultiAssetsHandler, PairLpGenerate, Pallet,
-	ZenlinkMultiAssets, LIQUIDITY, LOCAL, NATIVE, RESERVED,
+	AssetId, Config, MultiAssetsHandler, PairLpGenerate, Pallet, ZenlinkMultiAssets, LIQUIDITY,
+	LOCAL, NATIVE, RESERVED,
 };
 
 type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;

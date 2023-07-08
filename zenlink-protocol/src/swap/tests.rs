@@ -984,7 +984,7 @@ fn bootstrap_pair_deny_swap_should_work() {
 				0,
 				100,
 			),
-			Error::<Test>::PairNotExists
+			Error::<Test>::InvalidStatus
 		);
 
 		assert_noop!(
@@ -998,7 +998,7 @@ fn bootstrap_pair_deny_swap_should_work() {
 				BOB,
 				100,
 			),
-			Error::<Test>::PairNotExists
+			Error::<Test>::InvalidStatus
 		);
 	})
 }

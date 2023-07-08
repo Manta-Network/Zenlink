@@ -61,7 +61,7 @@ impl<T: Config> Pallet<T> {
 					reserve_1,
 				)
 				.map_or(Zero::zero(), |(amount_0, amount_1)| {
-					Self::calculate_liquidity(
+					calculate_liquidity(
 						amount_0,
 						amount_1,
 						reserve_0,
@@ -112,12 +112,12 @@ impl<T: Config> Pallet<T> {
 		let lp_total_supply = T::MultiAssetsHandler::total_supply(lp_asset_id);
 
 		Some((
-			Self::calculate_share_amount(
+			calculate_share_amount(
 				amount,
 				lp_total_supply,
 				T::MultiAssetsHandler::balance_of(asset_0, &pair_account),
 			),
-			Self::calculate_share_amount(
+			calculate_share_amount(
 				amount,
 				lp_total_supply,
 				T::MultiAssetsHandler::balance_of(asset_1, &pair_account),

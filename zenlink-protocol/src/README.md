@@ -1,5 +1,5 @@
 ## Zenlink Protocol v0.4.0 Overview
-![zenlink protocol](./docs/zenlink-protocol-v0.4.0.png)
+![zenlink protocol](../../images/zenlink-protocol-v0.4.0.png)
 
 `Zenlink Protocol` mainly consists of two parts: assets and asset operations, 
 namely `Zenlink Assets` and `Zenlink Actions`.

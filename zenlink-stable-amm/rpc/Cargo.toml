@@ -7,7 +7,11 @@ edition = "2021"
 serde = { version = "1.0.119", features = ["derive"], optional = true }
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
 
-jsonrpsee = { version = "0.16.2", features = ["client-core", "server", "macros"] }
+jsonrpsee = { version = "0.16.2", features = [
+  "client-core",
+  "server",
+  "macros",
+] }
 
 
 sp-blockchain = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
@@ -15,4 +19,4 @@ sp-api = { git = "https://github.com/paritytech/substrate", default-features = f
 sp-rpc = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 
-zenlink-stable-amm-runtime-api = { path = "./runtime-api", version = "0.1.0"}
+zenlink-stable-amm-runtime-api = { path = "./runtime-api", version = "0.1.0" }

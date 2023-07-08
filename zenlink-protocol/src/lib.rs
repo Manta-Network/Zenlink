@@ -31,9 +31,7 @@ use frame_support::{
 	PalletId, RuntimeDebug,
 };
 use sp_core::U256;
-use sp_runtime::traits::{
-	AccountIdConversion, Hash, MaybeSerializeDeserialize, One, StaticLookup, Zero,
-};
+use sp_runtime::traits::{AccountIdConversion, Hash, MaybeSerializeDeserialize, One, Zero};
 use sp_std::{
 	collections::btree_map::BTreeMap, convert::TryInto, fmt::Debug, marker::PhantomData,
 	prelude::*, vec,
@@ -55,15 +53,13 @@ mod default_weights;
 pub use default_weights::WeightInfo;
 pub use multiassets::{MultiAssetsHandler, ZenlinkMultiAssets};
 pub use primitives::{
-	AssetBalance, AssetId, AssetInfo, BootstrapParameter, PairLpGenerate,
-	PairMetadata, PairStatus,
+	AssetBalance, AssetId, AssetInfo, BootstrapParameter, PairLpGenerate, PairMetadata, PairStatus,
 	PairStatus::{Bootstrap, Disable, Trading},
 	LIQUIDITY, LOCAL, NATIVE, RESERVED,
 };
 pub use rpc::PairInfo;
-pub use traits::{
-	ExportZenlink, GenerateLpAssetId, LocalAssetHandler, OtherAssetHandler,
-};
+pub use swap::util::*;
+pub use traits::{ExportZenlink, GenerateLpAssetId, LocalAssetHandler, OtherAssetHandler};
 
 pub use pallet::*;
 
@@ -370,6 +366,10 @@ pub mod pallet {
 		PairNotExists,
 		/// Asset does not exist.
 		AssetNotExists,
+		/// LP asset not exist.
+		LPAssetNotExists,
+		/// LP pair status invalid.
+		InvalidStatus,
 		/// Liquidity is not enough.
 		InsufficientLiquidity,
 		/// Trading pair does have enough foreign.
@@ -378,6 +378,8 @@ pub mod pallet {
 		InsufficientTargetAmount,
 		/// Sold amount is more than exception.
 		ExcessiveSoldAmount,
+		/// Liquidity amount is zero.
+		ZeroLiquidity,
 		/// Can't find pair though trading path.
 		InvalidPath,
 		/// Incorrect foreign amount range.
@@ -436,20 +438,10 @@ pub mod pallet {
 		#[pallet::weight(T::WeightInfo::set_fee_receiver())]
 		pub fn set_fee_receiver(
 			origin: OriginFor<T>,
-			send_to: Option<<T::Lookup as StaticLookup>::Source>,
+			receiver: Option<T::AccountId>,
 		) -> DispatchResult {
 			ensure_root(origin)?;
-
-			let receiver = match send_to {
-				Some(r) => {
-					let account = T::Lookup::lookup(r)?;
-					Some(account)
-				},
-				None => None,
-			};
-
 			FeeMeta::<T>::mutate(|fee_meta| fee_meta.0 = receiver);
-
 			Ok(())
 		}
 
@@ -467,9 +459,7 @@ pub mod pallet {
 		pub fn set_fee_point(origin: OriginFor<T>, fee_point: u8) -> DispatchResult {
 			ensure_root(origin)?;
 			ensure!(fee_point <= 30, Error::<T>::InvalidFeePoint);
-
 			FeeMeta::<T>::mutate(|fee_meta| fee_meta.1 = fee_point);
-
 			Ok(())
 		}
 
@@ -485,16 +475,13 @@ pub mod pallet {
 		pub fn transfer(
 			origin: OriginFor<T>,
 			asset_id: T::AssetId,
-			recipient: <T::Lookup as StaticLookup>::Source,
+			recipient: T::AccountId,
 			#[pallet::compact] amount: AssetBalance,
 		) -> DispatchResult {
 			let origin = ensure_signed(origin)?;
-			let target = T::Lookup::lookup(recipient)?;
 			let balance = T::MultiAssetsHandler::balance_of(asset_id, &origin);
 			ensure!(balance >= amount, Error::<T>::InsufficientAssetBalance);
-
-			T::MultiAssetsHandler::transfer(asset_id, &origin, &target, amount)?;
-
+			T::MultiAssetsHandler::transfer(asset_id, &origin, &recipient, amount)?;
 			Ok(())
 		}
 
@@ -617,12 +604,11 @@ pub mod pallet {
 			#[pallet::compact] liquidity: AssetBalance,
 			#[pallet::compact] amount_0_min: AssetBalance,
 			#[pallet::compact] amount_1_min: AssetBalance,
-			recipient: <T::Lookup as StaticLookup>::Source,
+			recipient: T::AccountId,
 			#[pallet::compact] deadline: T::BlockNumber,
 		) -> DispatchResult {
 			ensure!(asset_0.is_support() && asset_1.is_support(), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
-			let recipient = T::Lookup::lookup(recipient)?;
 			let now = frame_system::Pallet::<T>::block_number();
 			ensure!(deadline > now, Error::<T>::Deadline);
 
@@ -654,12 +640,11 @@ pub mod pallet {
 			#[pallet::compact] amount_in: AssetBalance,
 			#[pallet::compact] amount_out_min: AssetBalance,
 			path: Vec<T::AssetId>,
-			recipient: <T::Lookup as StaticLookup>::Source,
+			recipient: T::AccountId,
 			#[pallet::compact] deadline: T::BlockNumber,
 		) -> DispatchResult {
 			ensure!(path.iter().all(|id| id.is_support()), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
-			let recipient = T::Lookup::lookup(recipient)?;
 			let now = frame_system::Pallet::<T>::block_number();
 			ensure!(deadline > now, Error::<T>::Deadline);
 
@@ -689,12 +674,11 @@ pub mod pallet {
 			#[pallet::compact] amount_out: AssetBalance,
 			#[pallet::compact] amount_in_max: AssetBalance,
 			path: Vec<T::AssetId>,
-			recipient: <T::Lookup as StaticLookup>::Source,
+			recipient: T::AccountId,
 			#[pallet::compact] deadline: T::BlockNumber,
 		) -> DispatchResult {
 			ensure!(path.iter().all(|id| id.is_support()), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
-			let recipient = T::Lookup::lookup(recipient)?;
 			let now = frame_system::Pallet::<T>::block_number();
 			ensure!(deadline > now, Error::<T>::Deadline);
 
@@ -747,69 +731,16 @@ pub mod pallet {
 					(target_supply_1, target_supply_0, capacity_supply_1, capacity_supply_0)
 				};
 
-			PairStatuses::<T>::try_mutate(pair, |status| match status {
-				Trading(_) => Err(Error::<T>::PairAlreadyExists),
-				Bootstrap(params) => {
-					if Self::bootstrap_disable(params) {
-						*status = Bootstrap(BootstrapParameter {
-							target_supply: (target_supply_0, target_supply_1),
-							capacity_supply: (capacity_supply_0, capacity_supply_1),
-							accumulated_supply: params.accumulated_supply,
-							end_block_number: end,
-							pair_account: Self::account_id(),
-						});
-
-						// must no reward before update.
-						let exist_rewards = BootstrapRewards::<T>::get(pair);
-						for (_, exist_reward) in exist_rewards {
-							if exist_reward != Zero::zero() {
-								return Err(Error::<T>::ExistRewardsInBootstrap)
-							}
-						}
-
-						BootstrapRewards::<T>::insert(
-							pair,
-							rewards
-								.into_iter()
-								.map(|asset_id| (asset_id, Zero::zero()))
-								.collect::<BTreeMap<T::AssetId, AssetBalance>>(),
-						);
-
-						BootstrapLimits::<T>::insert(
-							pair,
-							limits.into_iter().collect::<BTreeMap<T::AssetId, AssetBalance>>(),
-						);
-
-						Ok(())
-					} else {
-						Err(Error::<T>::PairAlreadyExists)
-					}
-				},
-				Disable => {
-					*status = Bootstrap(BootstrapParameter {
-						target_supply: (target_supply_0, target_supply_1),
-						capacity_supply: (capacity_supply_0, capacity_supply_1),
-						accumulated_supply: (Zero::zero(), Zero::zero()),
-						end_block_number: end,
-						pair_account: Self::account_id(),
-					});
-
-					BootstrapRewards::<T>::insert(
-						pair,
-						rewards
-							.into_iter()
-							.map(|asset_id| (asset_id, Zero::zero()))
-							.collect::<BTreeMap<T::AssetId, AssetBalance>>(),
-					);
-
-					BootstrapLimits::<T>::insert(
-						pair,
-						limits.into_iter().collect::<BTreeMap<T::AssetId, AssetBalance>>(),
-					);
-
-					Ok(())
-				},
-			})?;
+			Self::do_bootstrap_create(
+				pair,
+				target_supply_0,
+				target_supply_1,
+				capacity_supply_0,
+				capacity_supply_1,
+				end,
+				rewards,
+				limits,
+			)?;
 
 			Self::deposit_event(Event::BootstrapCreated(
 				Self::account_id(),
@@ -875,13 +806,12 @@ pub mod pallet {
 		#[frame_support::transactional]
 		pub fn bootstrap_claim(
 			origin: OriginFor<T>,
-			recipient: <T::Lookup as StaticLookup>::Source,
+			recipient: T::AccountId,
 			asset_0: T::AssetId,
 			asset_1: T::AssetId,
 			#[pallet::compact] deadline: T::BlockNumber,
 		) -> DispatchResult {
 			let who = ensure_signed(origin)?;
-			let recipient = T::Lookup::lookup(recipient)?;
 
 			let now = frame_system::Pallet::<T>::block_number();
 			ensure!(deadline > now, Error::<T>::Deadline);
@@ -915,8 +845,6 @@ pub mod pallet {
 		///
 		/// - `asset_0`: Asset which make up bootstrap pair
 		/// - `asset_1`: Asset which make up bootstrap pair
-		/// - `min_contribution_0`: The new min amount of asset_0 contribute
-		/// - `min_contribution_0`: The new min amount of asset_1 contribute
 		/// - `target_supply_0`: The new target amount of asset_0 total contribute
 		/// - `target_supply_0`: The new target amount of asset_1 total contribute
 		/// - `capacity_supply_0`: The new max amount of asset_0 total contribute
@@ -949,42 +877,17 @@ pub mod pallet {
 				};
 
 			let pair_account = Self::pair_account_id(asset_0, asset_1);
-			PairStatuses::<T>::try_mutate(pair, |status| match status {
-				Trading(_) => Err(Error::<T>::PairAlreadyExists),
-				Bootstrap(params) => {
-					*status = Bootstrap(BootstrapParameter {
-						target_supply: (target_supply_0, target_supply_1),
-						capacity_supply: (capacity_supply_0, capacity_supply_1),
-						accumulated_supply: params.accumulated_supply,
-						end_block_number: end,
-						pair_account: Self::account_id(),
-					});
 
-					// must no reward before update.
-					let exist_rewards = BootstrapRewards::<T>::get(pair);
-					for (_, exist_reward) in exist_rewards {
-						if exist_reward != Zero::zero() {
-							return Err(Error::<T>::ExistRewardsInBootstrap)
-						}
-					}
-
-					BootstrapRewards::<T>::insert(
-						pair,
-						rewards
-							.into_iter()
-							.map(|asset_id| (asset_id, Zero::zero()))
-							.collect::<BTreeMap<T::AssetId, AssetBalance>>(),
-					);
-
-					BootstrapLimits::<T>::insert(
-						pair,
-						limits.into_iter().collect::<BTreeMap<T::AssetId, AssetBalance>>(),
-					);
-
-					Ok(())
-				},
-				Disable => Err(Error::<T>::NotInBootstrap),
-			})?;
+			Self::do_bootstrap_update(
+				pair,
+				target_supply_0,
+				target_supply_1,
+				capacity_supply_0,
+				capacity_supply_1,
+				end,
+				rewards,
+				limits,
+			)?;
 
 			Self::deposit_event(Event::BootstrapUpdate(
 				pair_account,
@@ -1058,11 +961,10 @@ pub mod pallet {
 			origin: OriginFor<T>,
 			asset_0: T::AssetId,
 			asset_1: T::AssetId,
-			recipient: <T::Lookup as StaticLookup>::Source,
+			recipient: T::AccountId,
 		) -> DispatchResult {
 			ensure_root(origin)?;
 			let pair = Self::sort_asset_id(asset_0, asset_1);
-			let recipient = T::Lookup::lookup(recipient)?;
 
 			BootstrapRewards::<T>::try_mutate(pair, |rewards| -> DispatchResult {
 				for (asset_id, amount) in rewards {

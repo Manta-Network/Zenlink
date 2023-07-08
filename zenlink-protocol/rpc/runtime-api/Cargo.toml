@@ -19,9 +19,4 @@ serde_json = "1.0"
 
 [features]
 default = ["std"]
-std = [
-    'codec/std',
-    'sp-api/std',
-    'sp-std/std',
-    'zenlink-protocol/std'
-]
+std = ['codec/std', 'sp-api/std', 'sp-std/std', 'zenlink-protocol/std']
