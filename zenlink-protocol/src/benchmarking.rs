@@ -237,7 +237,7 @@ benchmarks! {
 			0,
 			100u32.saturated_into()));
 
-	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 1 * UNIT, 0, 0, caller, 100u32.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 1 * UNIT, 0, 0, caller.clone(), 100u32.saturated_into())
 
 	swap_exact_assets_for_assets{
 		let caller: T::AccountId = whitelisted_caller();
