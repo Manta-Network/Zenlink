@@ -36,7 +36,7 @@ benchmarks! {
 
 	set_fee_receiver{
 		let caller: T::AccountId = whitelisted_caller();
-	}:_(RawOrigin::Root, caller.into())
+	}:_(RawOrigin::Root, caller.clone().into())
 
 	set_fee_point{
 
@@ -117,7 +117,7 @@ benchmarks! {
 			ASSET_1.into(),
 		));
 
-	}:_(RawOrigin::Signed(caller.clone()), caller.into(), ASSET_0.into(), ASSET_1.into(), 120u128.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), caller.clone().into(), ASSET_0.into(), ASSET_1.into(), 120u128.saturated_into())
 
 	bootstrap_end{
 		let caller: T::AccountId = whitelisted_caller();
@@ -214,7 +214,7 @@ benchmarks! {
 
 		assert_ok!(ZenlinkPallet::<T>::create_pair((RawOrigin::Root).into(), ASSET_0.into(), ASSET_1.into()));
 
-		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller.into()));
+		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller.clone().into()));
 
 	}:_(RawOrigin::Signed(caller.clone()), ASSET_0.into(), ASSET_1.into(), 10 * UNIT, 10* UNIT, 0,0, 100u32.saturated_into())
 
@@ -225,7 +225,7 @@ benchmarks! {
 
 		assert_ok!(ZenlinkPallet::<T>::create_pair((RawOrigin::Root).into(), ASSET_0.into(), ASSET_1.into()));
 
-		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller.into()));
+		assert_ok!(ZenlinkPallet::<T>::set_fee_receiver((RawOrigin::Root).into(), caller.clone().into()));
 
 		assert_ok!(ZenlinkPallet::<T>::add_liquidity(
 			RawOrigin::Signed(caller.clone()).into(),
@@ -270,7 +270,7 @@ benchmarks! {
 
 		let path: Vec<T::AssetId> = vec![ASSET_0.into(), ASSET_1.into(), ASSET_2.into()];
 
-	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 0,path, caller.into(), 100u32.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 0,path, caller.clone().into(), 100u32.saturated_into())
 
 	swap_assets_for_exact_assets{
 		let caller: T::AccountId = whitelisted_caller();
@@ -302,5 +302,5 @@ benchmarks! {
 			100u32.saturated_into()));
 
 		let path: Vec<T::AssetId> = vec![ASSET_0.into(), ASSET_1.into(), ASSET_2.into()];
-	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 10*UNIT,path, caller.into(), 100u32.saturated_into())
+	}:_(RawOrigin::Signed(caller.clone()), 1* UNIT, 10*UNIT,path, caller.clone().into(), 100u32.saturated_into())
 }
