@@ -9,6 +9,7 @@
 //! mechanism refers to the design of Uniswap V2.
 
 use super::*;
+use frame_system::pallet_prelude::BlockNumberFor;
 
 #[cfg(test)]
 mod mock;
@@ -1001,7 +1002,7 @@ impl<T: Config> Pallet<T> {
 
 	// After end block, bootstrap has not enough asset. Is will become disable.
 	pub(crate) fn bootstrap_disable(
-		params: &BootstrapParameter<AssetBalance, T::BlockNumber, T::AccountId>,
+		params: &BootstrapParameter<AssetBalance, BlockNumberFor<T>, T::AccountId>,
 	) -> bool {
 		let now = frame_system::Pallet::<T>::block_number();
 		if now > params.end_block_number &&

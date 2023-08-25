@@ -66,7 +66,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn swap_exact_token_for_tokens_through_stable_pool() -> Weight {
 		// Minimum execution time: 181_671 nanoseconds.
-		Weight::from_ref_time(183_419_000 as u64)
+		Weight::from_parts(183_419_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(13 as u64))
 			.saturating_add(T::DbWeight::get().writes(9 as u64))
 	}
@@ -83,7 +83,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn swap_exact_token_for_tokens_through_stable_pool() -> Weight {
 		// Minimum execution time: 181_671 nanoseconds.
-		Weight::from_ref_time(183_419_000 as u64)
+		Weight::from_parts(183_419_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(13 as u64))
 			.saturating_add(RocksDbWeight::get().writes(9 as u64))
 	}

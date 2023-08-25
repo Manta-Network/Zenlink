@@ -76,7 +76,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: ZenlinkStableAmm Pools (r:1 w:1)
 	fn create_base_pool() -> Weight {
 		// Minimum execution time: 46_736 nanoseconds.
-		Weight::from_ref_time(47_481_000 as u64)
+		Weight::from_parts(47_481_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(4 as u64))
 			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
@@ -88,7 +88,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: Tokens TotalIssuance (r:1 w:0)
 	fn create_meta_pool() -> Weight {
 		// Minimum execution time: 81_917 nanoseconds.
-		Weight::from_ref_time(83_417_000 as u64)
+		Weight::from_parts(83_417_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(8 as u64))
 			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
@@ -99,7 +99,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:1)
 	fn add_liquidity() -> Weight {
 		// Minimum execution time: 142_017 nanoseconds.
-		Weight::from_ref_time(143_700_000 as u64)
+		Weight::from_parts(143_700_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(9 as u64))
 			.saturating_add(T::DbWeight::get().writes(8 as u64))
 	}
@@ -109,7 +109,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn swap() -> Weight {
 		// Minimum execution time: 111_324 nanoseconds.
-		Weight::from_ref_time(117_940_000 as u64)
+		Weight::from_parts(117_940_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(7 as u64))
 			.saturating_add(T::DbWeight::get().writes(5 as u64))
 	}
@@ -119,7 +119,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn remove_liquidity() -> Weight {
 		// Minimum execution time: 144_402 nanoseconds.
-		Weight::from_ref_time(146_147_000 as u64)
+		Weight::from_parts(146_147_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(8 as u64))
 			.saturating_add(T::DbWeight::get().writes(7 as u64))
 	}
@@ -130,7 +130,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn remove_liquidity_one_currency() -> Weight {
 		// Minimum execution time: 111_716 nanoseconds.
-		Weight::from_ref_time(117_518_000 as u64)
+		Weight::from_parts(117_518_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(7 as u64))
 			.saturating_add(T::DbWeight::get().writes(5 as u64))
 	}
@@ -141,7 +141,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn remove_liquidity_imbalance() -> Weight {
 		// Minimum execution time: 132_703 nanoseconds.
-		Weight::from_ref_time(133_706_000 as u64)
+		Weight::from_parts(133_706_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(9 as u64))
 			.saturating_add(T::DbWeight::get().writes(7 as u64))
 	}
@@ -152,7 +152,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:1)
 	fn add_pool_and_base_pool_liquidity() -> Weight {
 		// Minimum execution time: 248_369 nanoseconds.
-		Weight::from_ref_time(249_976_000 as u64)
+		Weight::from_parts(249_976_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(15 as u64))
 			.saturating_add(T::DbWeight::get().writes(14 as u64))
 	}
@@ -162,7 +162,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:2 w:0)
 	fn remove_pool_and_base_pool_liquidity() -> Weight {
 		// Minimum execution time: 193_866 nanoseconds.
-		Weight::from_ref_time(195_741_000 as u64)
+		Weight::from_parts(195_741_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(15 as u64))
 			.saturating_add(T::DbWeight::get().writes(13 as u64))
 	}
@@ -173,7 +173,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:2 w:0)
 	fn remove_pool_and_base_pool_liquidity_one_currency() -> Weight {
 		// Minimum execution time: 185_493 nanoseconds.
-		Weight::from_ref_time(186_668_000 as u64)
+		Weight::from_parts(186_668_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(12 as u64))
 			.saturating_add(T::DbWeight::get().writes(9 as u64))
 	}
@@ -184,7 +184,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn swap_pool_from_base() -> Weight {
 		// Minimum execution time: 195_027 nanoseconds.
-		Weight::from_ref_time(196_708_000 as u64)
+		Weight::from_parts(196_708_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(12 as u64))
 			.saturating_add(T::DbWeight::get().writes(9 as u64))
 	}
@@ -195,7 +195,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: Tokens TotalIssuance (r:1 w:1)
 	fn swap_pool_to_base() -> Weight {
 		// Minimum execution time: 192_067 nanoseconds.
-		Weight::from_ref_time(193_276_000 as u64)
+		Weight::from_parts(193_276_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(12 as u64))
 			.saturating_add(T::DbWeight::get().writes(9 as u64))
 	}
@@ -206,7 +206,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:2 w:1)
 	fn swap_meta_pool_underlying() -> Weight {
 		// Minimum execution time: 197_939 nanoseconds.
-		Weight::from_ref_time(199_533_000 as u64)
+		Weight::from_parts(199_533_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(12 as u64))
 			.saturating_add(T::DbWeight::get().writes(10 as u64))
 	}
@@ -215,7 +215,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn withdraw_admin_fee() -> Weight {
 		// Minimum execution time: 77_701 nanoseconds.
-		Weight::from_ref_time(79_068_000 as u64)
+		Weight::from_parts(79_068_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(5 as u64))
 			.saturating_add(T::DbWeight::get().writes(3 as u64))
 	}
@@ -229,7 +229,7 @@ impl WeightInfo for () {
 	// Storage: ZenlinkStableAmm Pools (r:1 w:1)
 	fn create_base_pool() -> Weight {
 		// Minimum execution time: 46_736 nanoseconds.
-		Weight::from_ref_time(47_481_000 as u64)
+		Weight::from_parts(47_481_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(4 as u64))
 			.saturating_add(RocksDbWeight::get().writes(4 as u64))
 	}
@@ -241,7 +241,7 @@ impl WeightInfo for () {
 	// Storage: Tokens TotalIssuance (r:1 w:0)
 	fn create_meta_pool() -> Weight {
 		// Minimum execution time: 81_917 nanoseconds.
-		Weight::from_ref_time(83_417_000 as u64)
+		Weight::from_parts(83_417_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(8 as u64))
 			.saturating_add(RocksDbWeight::get().writes(4 as u64))
 	}
@@ -252,7 +252,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:1)
 	fn add_liquidity() -> Weight {
 		// Minimum execution time: 142_017 nanoseconds.
-		Weight::from_ref_time(143_700_000 as u64)
+		Weight::from_parts(143_700_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(9 as u64))
 			.saturating_add(RocksDbWeight::get().writes(8 as u64))
 	}
@@ -262,7 +262,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn swap() -> Weight {
 		// Minimum execution time: 111_324 nanoseconds.
-		Weight::from_ref_time(117_940_000 as u64)
+		Weight::from_parts(117_940_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(7 as u64))
 			.saturating_add(RocksDbWeight::get().writes(5 as u64))
 	}
@@ -272,7 +272,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn remove_liquidity() -> Weight {
 		// Minimum execution time: 144_402 nanoseconds.
-		Weight::from_ref_time(146_147_000 as u64)
+		Weight::from_parts(146_147_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(8 as u64))
 			.saturating_add(RocksDbWeight::get().writes(7 as u64))
 	}
@@ -283,7 +283,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn remove_liquidity_one_currency() -> Weight {
 		// Minimum execution time: 111_716 nanoseconds.
-		Weight::from_ref_time(117_518_000 as u64)
+		Weight::from_parts(117_518_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(7 as u64))
 			.saturating_add(RocksDbWeight::get().writes(5 as u64))
 	}
@@ -294,7 +294,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn remove_liquidity_imbalance() -> Weight {
 		// Minimum execution time: 132_703 nanoseconds.
-		Weight::from_ref_time(133_706_000 as u64)
+		Weight::from_parts(133_706_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(9 as u64))
 			.saturating_add(RocksDbWeight::get().writes(7 as u64))
 	}
@@ -305,7 +305,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:1)
 	fn add_pool_and_base_pool_liquidity() -> Weight {
 		// Minimum execution time: 248_369 nanoseconds.
-		Weight::from_ref_time(249_976_000 as u64)
+		Weight::from_parts(249_976_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(15 as u64))
 			.saturating_add(RocksDbWeight::get().writes(14 as u64))
 	}
@@ -315,7 +315,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:2 w:0)
 	fn remove_pool_and_base_pool_liquidity() -> Weight {
 		// Minimum execution time: 193_866 nanoseconds.
-		Weight::from_ref_time(195_741_000 as u64)
+		Weight::from_parts(195_741_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(15 as u64))
 			.saturating_add(RocksDbWeight::get().writes(13 as u64))
 	}
@@ -326,7 +326,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:2 w:0)
 	fn remove_pool_and_base_pool_liquidity_one_currency() -> Weight {
 		// Minimum execution time: 185_493 nanoseconds.
-		Weight::from_ref_time(186_668_000 as u64)
+		Weight::from_parts(186_668_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(12 as u64))
 			.saturating_add(RocksDbWeight::get().writes(9 as u64))
 	}
@@ -337,7 +337,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn swap_pool_from_base() -> Weight {
 		// Minimum execution time: 195_027 nanoseconds.
-		Weight::from_ref_time(196_708_000 as u64)
+		Weight::from_parts(196_708_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(12 as u64))
 			.saturating_add(RocksDbWeight::get().writes(9 as u64))
 	}
@@ -348,7 +348,7 @@ impl WeightInfo for () {
 	// Storage: Tokens TotalIssuance (r:1 w:1)
 	fn swap_pool_to_base() -> Weight {
 		// Minimum execution time: 192_067 nanoseconds.
-		Weight::from_ref_time(193_276_000 as u64)
+		Weight::from_parts(193_276_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(12 as u64))
 			.saturating_add(RocksDbWeight::get().writes(9 as u64))
 	}
@@ -359,7 +359,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:2 w:1)
 	fn swap_meta_pool_underlying() -> Weight {
 		// Minimum execution time: 197_939 nanoseconds.
-		Weight::from_ref_time(199_533_000 as u64)
+		Weight::from_parts(199_533_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(12 as u64))
 			.saturating_add(RocksDbWeight::get().writes(10 as u64))
 	}
@@ -368,7 +368,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn withdraw_admin_fee() -> Weight {
 		// Minimum execution time: 77_701 nanoseconds.
-		Weight::from_ref_time(79_068_000 as u64)
+		Weight::from_parts(79_068_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(5 as u64))
 			.saturating_add(RocksDbWeight::get().writes(3 as u64))
 	}

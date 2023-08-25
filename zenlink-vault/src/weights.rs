@@ -66,7 +66,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: ZenlinkVault VaultRatio (r:1 w:1)
 	fn create_vault_asset() -> Weight {
 		// Minimum execution time: 20_993 nanoseconds.
-		Weight::from_ref_time(21_586_000 as u64)
+		Weight::from_parts(21_586_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(4 as u64))
 			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
@@ -77,7 +77,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:1)
 	fn deposit() -> Weight {
 		// Minimum execution time: 104_014 nanoseconds.
-		Weight::from_ref_time(105_780_000 as u64)
+		Weight::from_parts(105_780_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(8 as u64))
 			.saturating_add(T::DbWeight::get().writes(5 as u64))
 	}
@@ -88,7 +88,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:1)
 	fn mint() -> Weight {
 		// Minimum execution time: 97_881 nanoseconds.
-		Weight::from_ref_time(105_036_000 as u64)
+		Weight::from_parts(105_036_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(8 as u64))
 			.saturating_add(T::DbWeight::get().writes(5 as u64))
 	}
@@ -100,7 +100,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn withdraw() -> Weight {
 		// Minimum execution time: 99_997 nanoseconds.
-		Weight::from_ref_time(101_048_000 as u64)
+		Weight::from_parts(101_048_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(9 as u64))
 			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
@@ -112,7 +112,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: System Account (r:1 w:0)
 	fn redeem() -> Weight {
 		// Minimum execution time: 98_131 nanoseconds.
-		Weight::from_ref_time(101_640_000 as u64)
+		Weight::from_parts(101_640_000 as u64, 0)
 			.saturating_add(T::DbWeight::get().reads(9 as u64))
 			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
@@ -125,7 +125,7 @@ impl WeightInfo for () {
 	// Storage: ZenlinkVault VaultRatio (r:1 w:1)
 	fn create_vault_asset() -> Weight {
 		// Minimum execution time: 20_993 nanoseconds.
-		Weight::from_ref_time(21_586_000 as u64)
+		Weight::from_parts(21_586_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(4 as u64))
 			.saturating_add(RocksDbWeight::get().writes(4 as u64))
 	}
@@ -136,7 +136,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:1)
 	fn deposit() -> Weight {
 		// Minimum execution time: 104_014 nanoseconds.
-		Weight::from_ref_time(105_780_000 as u64)
+		Weight::from_parts(105_780_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(8 as u64))
 			.saturating_add(RocksDbWeight::get().writes(5 as u64))
 	}
@@ -147,7 +147,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:1)
 	fn mint() -> Weight {
 		// Minimum execution time: 97_881 nanoseconds.
-		Weight::from_ref_time(105_036_000 as u64)
+		Weight::from_parts(105_036_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(8 as u64))
 			.saturating_add(RocksDbWeight::get().writes(5 as u64))
 	}
@@ -159,7 +159,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn withdraw() -> Weight {
 		// Minimum execution time: 99_997 nanoseconds.
-		Weight::from_ref_time(101_048_000 as u64)
+		Weight::from_parts(101_048_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(9 as u64))
 			.saturating_add(RocksDbWeight::get().writes(4 as u64))
 	}
@@ -171,7 +171,7 @@ impl WeightInfo for () {
 	// Storage: System Account (r:1 w:0)
 	fn redeem() -> Weight {
 		// Minimum execution time: 98_131 nanoseconds.
-		Weight::from_ref_time(101_640_000 as u64)
+		Weight::from_parts(101_640_000 as u64, 0)
 			.saturating_add(RocksDbWeight::get().reads(9 as u64))
 			.saturating_add(RocksDbWeight::get().writes(4 as u64))
 	}

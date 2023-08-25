@@ -147,7 +147,7 @@ pub mod pallet {
 			amount_out_min: T::Balance,
 			routes: Vec<Route<T::StablePoolId, T::StableCurrencyId, T::NormalCurrencyId>>,
 			to: T::AccountId,
-			deadline: T::BlockNumber,
+			deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			let who = ensure_signed(origin)?;
 

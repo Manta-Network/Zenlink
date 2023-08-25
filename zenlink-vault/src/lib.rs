@@ -48,7 +48,7 @@ pub mod pallet {
 		type AssetId: Parameter
 			+ Member
 			+ Copy
-			+ MaybeSerializeDeserialize
+			// + MaybeSerializeDeserialize
 			+ Ord
 			+ TypeInfo
 			+ MaxEncodedLen;
@@ -216,7 +216,7 @@ pub mod pallet {
 			Ok(())
 		}
 
-		#[pallet::weight(1_000_000)]
+		#[pallet::weight(Weight::from_parts(1_000_000 as u64, 0))]
 		pub fn update_max_penalty_ratio(
 			origin: OriginFor<T>,
 			vault_asset: T::AssetId,
@@ -235,7 +235,7 @@ pub mod pallet {
 			})
 		}
 
-		#[pallet::weight(1_000_000)]
+		#[pallet::weight(Weight::from_parts(1_000_000 as u64, 0))]
 		pub fn update_min_penalty_ratio(
 			origin: OriginFor<T>,
 			vault_asset: T::AssetId,
@@ -256,7 +256,7 @@ pub mod pallet {
 			})
 		}
 
-		#[pallet::weight(1_000_000)]
+		#[pallet::weight(Weight::from_parts(1_000_000 as u64, 0))]
 		pub fn add_asset_locked_accounts(
 			origin: OriginFor<T>,
 			underlying_asset: T::AssetId,
@@ -278,7 +278,7 @@ pub mod pallet {
 			)
 		}
 
-		#[pallet::weight(1_000_000)]
+		#[pallet::weight(Weight::from_parts(1_000_000 as u64, 0))]
 		pub fn remove_asset_locked_accounts(
 			origin: OriginFor<T>,
 			underlying_asset: T::AssetId,

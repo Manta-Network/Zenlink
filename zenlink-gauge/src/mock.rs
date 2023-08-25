@@ -4,12 +4,12 @@ use scale_info::TypeInfo;
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
 
-use frame_support::{pallet_prelude::GenesisBuild, parameter_types, traits::Contains, PalletId};
+use frame_support::{parameter_types, traits::Contains, PalletId};
 use sp_core::H256;
 use sp_runtime::{
 	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup},
-	RuntimeDebug,
+	BuildStorage, RuntimeDebug,
 };
 
 use orml_traits::parameter_type_with_key;
@@ -70,14 +70,13 @@ pub enum CurrencyId {
 impl frame_system::Config for Test {
 	type BaseCallFilter = frame_support::traits::Everything;
 	type RuntimeOrigin = RuntimeOrigin;
-	type Index = u64;
+	type Nonce = u64;
 	type RuntimeCall = RuntimeCall;
-	type BlockNumber = u64;
+	type Block = Block;
 	type Hash = H256;
 	type Hashing = BlakeTwo256;
 	type AccountId = u128;
 	type Lookup = IdentityLookup<Self::AccountId>;
-	type Header = Header;
 	type RuntimeEvent = RuntimeEvent;
 	type BlockHashCount = BlockHashCount;
 	type DbWeight = ();
@@ -118,10 +117,10 @@ impl pallet_balances::Config for Test {
 	type MaxLocks = ();
 	type MaxReserves = MaxReserves;
 	type ReserveIdentifier = [u8; 8];
-	type HoldIdentifier = [u8; 8];
 	type FreezeIdentifier = [u8; 8];
 	type MaxHolds = ();
 	type MaxFreezes = ();
+	type RuntimeHoldReason = RuntimeHoldReason;
 }
 
 impl pallet_timestamp::Config for Test {
@@ -141,12 +140,9 @@ impl Config for Test {
 }
 
 frame_support::construct_runtime!(
-	pub enum Test where
-		Block = Block,
-		NodeBlock = Block,
-		UncheckedExtrinsic = UncheckedExtrinsic,
+	pub struct Test
 	{
-		System: frame_system::{Pallet, Call, Config, Storage, Event<T>} = 0,
+		System: frame_system::{Pallet, Call, Config<T>, Storage, Event<T>} = 0,
 		TimestampPallet: pallet_timestamp::{Pallet, Call, Storage, Inherent} = 1,
 
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 8,
@@ -164,7 +160,7 @@ pub const TOKEN1_SYMBOL: u8 = 1;
 pub const TOKEN1_UNIT: u128 = 1_000_000_000_000_000_000;
 
 pub fn new_test_ext() -> sp_io::TestExternalities {
-	let mut t = frame_system::GenesisConfig::default().build_storage::<Test>().unwrap().into();
+	let mut t = frame_system::GenesisConfig::<Test>::default().build_storage().unwrap().into();
 	pallet_balances::GenesisConfig::<Test> { balances: vec![(ALICE, u128::MAX)] }
 		.assimilate_storage(&mut t)
 		.unwrap();
