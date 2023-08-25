@@ -16,7 +16,6 @@ use frame_support::{
 };
 use sp_core::H256;
 use sp_runtime::{
-	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup, Zero},
 	BuildStorage, RuntimeDebug,
 };
@@ -29,7 +28,6 @@ use zenlink_protocol::{
 };
 use zenlink_stable_amm::traits::{StablePoolLpCurrencyIdGenerate, ValidateCurrency};
 
-type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;
 type Block = frame_system::mocking::MockBlock<Test>;
 
 parameter_types! {

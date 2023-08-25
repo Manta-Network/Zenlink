@@ -14,7 +14,6 @@ use frame_support::{assert_ok, parameter_types, traits::Contains, PalletId};
 use frame_system::RawOrigin;
 use sp_core::H256;
 use sp_runtime::{
-	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup, Zero},
 	BuildStorage, RuntimeDebug,
 };
@@ -26,7 +25,6 @@ use crate::{
 };
 use orml_traits::{parameter_type_with_key, MultiCurrency};
 
-type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;
 type Block = frame_system::mocking::MockBlock<Test>;
 
 parameter_types! {

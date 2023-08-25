@@ -18,7 +18,6 @@ use frame_support::{
 };
 use sp_core::H256;
 use sp_runtime::{
-	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup},
 	BuildStorage, RuntimeDebug,
 };
@@ -30,7 +29,6 @@ pub use crate::{
 };
 use orml_traits::{parameter_type_with_key, MultiCurrency};
 
-type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;
 type Block = frame_system::mocking::MockBlock<Test>;
 
 #[derive(

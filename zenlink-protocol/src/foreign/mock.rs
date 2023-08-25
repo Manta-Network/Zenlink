@@ -5,7 +5,6 @@
 use frame_support::{parameter_types, PalletId};
 use sp_core::H256;
 use sp_runtime::{
-	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup},
 	BuildStorage,
 };
@@ -16,7 +15,6 @@ pub use crate::{
 	LIQUIDITY, LOCAL, NATIVE, RESERVED,
 };
 
-type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;
 type Block = frame_system::mocking::MockBlock<Test>;
 
 frame_support::construct_runtime!(
