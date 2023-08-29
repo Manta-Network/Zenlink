@@ -10,6 +10,7 @@
 
 use super::*;
 use crate::swap::util::*;
+use primitives::AssetId;
 
 #[cfg(test)]
 mod mock;
@@ -214,12 +215,23 @@ impl<T: Config> Pallet<T> {
 		path: &[T::AssetId],
 		recipient: &T::AccountId,
 	) -> DispatchResult {
-		let amounts = Self::get_amount_out_by_path(amount_in, path)?;
+		let mut new_amount_in = amount_in;
+		// TODO: double check that path[1] is the out asset
+		if path[0].is_native(T::SelfParaId::get()) {
+			// TODO: unwrap()
+			// charge 0.5% going to pallet account for later distribution
+			let fee = amount_in.checked_div(200).unwrap();
+			new_amount_in = amount_in - fee;
+			let native_swap_fees_account = T::PotId::get().into_account_truncating();
+			T::MultiAssetsHandler::transfer(path[0], who, &native_swap_fees_account, fee)?;
+		}
+
+		let amounts = Self::get_amount_out_by_path(new_amount_in, path)?;
 		ensure!(amounts[amounts.len() - 1] >= amount_out_min, Error::<T>::InsufficientTargetAmount);
 
 		let pair_account = Self::pair_account_id(path[0], path[1]);
 
-		T::MultiAssetsHandler::transfer(path[0], who, &pair_account, amount_in)?;
+		T::MultiAssetsHandler::transfer(path[0], who, &pair_account, new_amount_in)?;
 		Self::swap(&amounts, path, recipient)?;
 
 		Self::deposit_event(Event::AssetSwap(

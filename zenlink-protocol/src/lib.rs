@@ -96,6 +96,9 @@ pub mod pallet {
 		/// This parachain id.
 		type SelfParaId: Get<u32>;
 
+		/// Account Identifier from which the internal Pot is generated.
+		type PotId: Get<PalletId>;
+
 		/// Weight information for extrinsics in this pallet.
 		type WeightInfo: WeightInfo;
 	}
@@ -982,6 +985,13 @@ pub mod pallet {
 
 			Self::deposit_event(Event::WithdrawReward(pair.0, pair.1, recipient));
 
+			Ok(())
+		}
+
+		#[pallet::call_index(18)]
+		#[pallet::weight(0)]
+		#[frame_support::transactional]
+		pub fn distribute_swap_fees(origin: OriginFor<T>) -> DispatchResult {
 			Ok(())
 		}
 	}
