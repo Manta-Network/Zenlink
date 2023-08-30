@@ -987,12 +987,5 @@ pub mod pallet {
 
 			Ok(())
 		}
-
-		#[pallet::call_index(18)]
-		#[pallet::weight(0)]
-		#[frame_support::transactional]
-		pub fn distribute_swap_fees(origin: OriginFor<T>) -> DispatchResult {
-			Ok(())
-		}
 	}
 }
