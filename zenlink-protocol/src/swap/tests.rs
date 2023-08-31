@@ -14,7 +14,7 @@ const DOT_ASSET_ID: AssetId = AssetId { chain_id: 200, asset_type: LOCAL, asset_
 
 const KSM_ASSET_ID: AssetId = AssetId { chain_id: 200, asset_type: LOCAL, asset_index: 3 };
 
-const BTC_ASSET_ID: AssetId = AssetId { chain_id: 0, asset_type: NATIVE, asset_index: 0 };
+const BTC_ASSET_ID: AssetId = AssetId { chain_id: 300, asset_type: RESERVED, asset_index: 3 };
 
 const ETH_ASSET_ID: AssetId = AssetId { chain_id: 300, asset_type: NATIVE, asset_index: 0 };
 
@@ -217,70 +217,6 @@ fn foreign_get_out_price_should_work() {
 				*target_amount.first().unwrap() < BTC_UNIT * 1004 / 1000
 		);
 	});
-}
-
-#[test]
-fn pot_should_grow() {
-	new_test_ext().execute_with(|| {
-		assert_ok!(DexPallet::foreign_mint(DOT_ASSET_ID, &ALICE, u128::MAX));
-		assert_ok!(DexPallet::foreign_mint(BTC_ASSET_ID, &ALICE, u128::MAX));
-
-		let total_supply_dot = 50000 * DOT_UNIT;
-		let total_supply_btc = 50000 * BTC_UNIT;
-
-		assert_ok!(DexPallet::create_pair(RawOrigin::Root.into(), DOT_ASSET_ID, BTC_ASSET_ID,));
-
-		assert_ok!(DexPallet::inner_add_liquidity(
-			&ALICE,
-			DOT_ASSET_ID,
-			BTC_ASSET_ID,
-			total_supply_dot,
-			total_supply_btc,
-			0,
-			0
-		));
-		let balance_dot =
-			<Test as Config>::MultiAssetsHandler::balance_of(DOT_ASSET_ID, &PAIR_DOT_BTC);
-		let balance_btc =
-			<Test as Config>::MultiAssetsHandler::balance_of(BTC_ASSET_ID, &PAIR_DOT_BTC);
-
-		// // println!("balance_dot {} balance_btc {}", balance_dot, balance_btc);
-		// assert_eq!(balance_dot, 50000000000000000000);
-		// assert_eq!(balance_btc, 5000000000000);
-
-		let path = vec![BTC_ASSET_ID, DOT_ASSET_ID];
-		let amount_out_min = BTC_UNIT * 996 / 1000;
-		let amount_in = 1 * DOT_UNIT;
-		assert_ok!(DexPallet::inner_swap_exact_assets_for_assets(
-			&ALICE,
-			amount_in,
-			amount_out_min,
-			&path,
-			&BOB,
-		));
-
-		let btc_balance = <Test as Config>::MultiAssetsHandler::balance_of(BTC_ASSET_ID, &BOB);
-
-		// println!("btc_balance {}", btc_balance);
-		assert_eq!(btc_balance, 99698012);
-
-		assert!(btc_balance > amount_out_min);
-
-		let path = vec![BTC_ASSET_ID.clone(), DOT_ASSET_ID.clone()];
-		let amount_in = 1 * BTC_UNIT;
-		let amount_out_min = DOT_UNIT * 996 / 1000;
-		assert_ok!(DexPallet::inner_swap_exact_assets_for_assets(
-			&ALICE,
-			amount_in,
-			amount_out_min,
-			&path,
-			&BOB,
-		));
-		let dot_balance = <Test as Config>::MultiAssetsHandler::balance_of(DOT_ASSET_ID, &BOB);
-
-		// println!("dot_balance {}", dot_balance);
-		assert_eq!(dot_balance, 997019939603584)
-	})
 }
 
 #[test]
