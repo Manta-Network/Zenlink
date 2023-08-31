@@ -97,7 +97,7 @@ pub mod pallet {
 		type SelfParaId: Get<u32>;
 
 		/// Account Identifier from which the internal Pot is generated.
-		type PotId: Get<PalletId>;
+		type NativeSwapFeesPotId: Get<PalletId>;
 
 		/// Weight information for extrinsics in this pallet.
 		type WeightInfo: WeightInfo;

@@ -39,6 +39,7 @@ parameter_types! {
 	pub const BlockHashCount: u64 = 250;
 	pub const StableAmmPalletId: PalletId = PalletId(*b"/zlkSAmm");
 	pub const ZenlinkPalletId: PalletId = PalletId(*b"/zenlink");
+	pub const NativeSwapFeesPotId: PalletId = PalletId(*b"/swpfees");
 	pub const MaxReserves: u32 = 50;
 	pub const MaxLocks:u32 = 50;
 	pub const MinimumPeriod: Moment = SLOT_DURATION / 2;
@@ -209,7 +210,7 @@ impl zenlink_protocol::Config for Test {
 	type RuntimeEvent = RuntimeEvent;
 	type MultiAssetsHandler = ZenlinkMultiAssets<Zenlink, Balances, LocalAssetAdaptor<Tokens>>;
 	type PalletId = ZenlinkPalletId;
-	type PotId = ZenlinkPalletId;
+	type NativeSwapFeesPotId = NativeSwapFeesPotId;
 	type AssetId = AssetId;
 	type SelfParaId = SelfParaId;
 	type LpGenerate = PairLpGenerate<Self>;

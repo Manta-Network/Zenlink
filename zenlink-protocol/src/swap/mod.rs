@@ -220,7 +220,7 @@ impl<T: Config> Pallet<T> {
 			// charge 0.5% going to pallet account for later distribution
 			let fee = amount_in.checked_div(200).unwrap_or_default();
 			new_amount_in = amount_in.saturating_sub(fee);
-			let native_swap_fees_account = T::PotId::get().into_account_truncating();
+			let native_swap_fees_account = T::NativeSwapFeesPotId::get().into_account_truncating();
 			T::MultiAssetsHandler::transfer(path[0], who, &native_swap_fees_account, fee)?;
 		}
 

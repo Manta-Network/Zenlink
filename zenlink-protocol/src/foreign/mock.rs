@@ -35,7 +35,7 @@ parameter_types! {
 
 	pub const BlockHashCount: u64 = 250;
 	pub const ZenlinkPalletId: PalletId = PalletId(*b"/zenlink");
-	pub const SwapFeesPotId: PalletId = PalletId(*b"/swpfees");
+	pub const NativeSwapFeesPotId: PalletId = PalletId(*b"/swpfees");
 	pub const MaxReserves: u32 = 50;
 }
 
@@ -82,7 +82,7 @@ impl Config for Test {
 	type RuntimeEvent = RuntimeEvent;
 	type MultiAssetsHandler = ZenlinkMultiAssets<Zenlink, Balances>;
 	type PalletId = ZenlinkPalletId;
-	type PotId = SwapFeesPotId;
+	type NativeSwapFeesPotId = NativeSwapFeesPotId;
 	type AssetId = AssetId;
 	type LpGenerate = PairLpGenerate<Self>;
 	type SelfParaId = ();
