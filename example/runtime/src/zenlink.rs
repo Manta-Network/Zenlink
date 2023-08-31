@@ -46,7 +46,7 @@ where
 	fn local_balance_of(asset_id: ZenlinkAssetId, who: &AccountId) -> AssetBalance {
 		if let Ok(currency_id) = asset_id.try_into() {
 			return TryInto::<AssetBalance>::try_into(Local::free_balance(currency_id, &who))
-				.unwrap_or_default()
+				.unwrap_or_default();
 		}
 		AssetBalance::default()
 	}
@@ -54,7 +54,7 @@ where
 	fn local_total_supply(asset_id: ZenlinkAssetId) -> AssetBalance {
 		if let Ok(currency_id) = asset_id.try_into() {
 			return TryInto::<AssetBalance>::try_into(Local::total_issuance(currency_id))
-				.unwrap_or_default()
+				.unwrap_or_default();
 		}
 		AssetBalance::default()
 	}
@@ -101,7 +101,7 @@ where
 					.map_err(|_| DispatchError::Other("convert amount in local deposit"))?,
 			)?;
 		} else {
-			return Err(DispatchError::Other("unknown asset in local transfer"))
+			return Err(DispatchError::Other("unknown asset in local transfer"));
 		}
 
 		Ok(amount)
@@ -121,7 +121,7 @@ where
 					.map_err(|_| DispatchError::Other("convert amount in local withdraw"))?,
 			)?;
 		} else {
-			return Err(DispatchError::Other("unknown asset in local transfer"))
+			return Err(DispatchError::Other("unknown asset in local transfer"));
 		}
 
 		Ok(amount)
@@ -157,7 +157,7 @@ impl ValidateCurrency<CurrencyId> for StableAmmVerifyPoolAsset {
 
 	fn validate_pool_lp_currency(_currency_id: CurrencyId) -> bool {
 		if Tokens::total_issuance(_currency_id) > 0 {
-			return false
+			return false;
 		}
 		true
 	}

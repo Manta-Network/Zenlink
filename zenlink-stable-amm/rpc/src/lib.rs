@@ -239,7 +239,7 @@ where
 
 		for (i, c) in currencies.iter().enumerate() {
 			if *c == currency {
-				return Ok(i as u32)
+				return Ok(i as u32);
 			}
 		}
 		Err(runtime_error_into_rpc_err("invalid index"))
@@ -314,7 +314,7 @@ where
 
 		for (i, balance) in balances.iter().enumerate() {
 			if i as u32 == index {
-				return try_into_rpc_balance(*balance)
+				return try_into_rpc_balance(*balance);
 			}
 		}
 

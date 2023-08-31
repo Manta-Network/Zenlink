@@ -154,8 +154,8 @@ fn foreign_get_in_price_should_work() {
 		assert_eq!(target_amount, vec![1000000000000000, 99690060]);
 
 		assert!(
-			*target_amount.last().unwrap() < BTC_UNIT * 997 / 1000 &&
-				*target_amount.last().unwrap() > BTC_UNIT * 996 / 1000
+			*target_amount.last().unwrap() < BTC_UNIT * 997 / 1000
+				&& *target_amount.last().unwrap() > BTC_UNIT * 996 / 1000
 		);
 
 		let path = vec![BTC_ASSET_ID, DOT_ASSET_ID];
@@ -166,8 +166,8 @@ fn foreign_get_in_price_should_work() {
 		assert_eq!(target_amount, vec![100000000, 996900609009281]);
 
 		assert!(
-			*target_amount.last().unwrap() < DOT_UNIT * 997 / 1000 &&
-				*target_amount.last().unwrap() > DOT_UNIT * 996 / 1000
+			*target_amount.last().unwrap() < DOT_UNIT * 997 / 1000
+				&& *target_amount.last().unwrap() > DOT_UNIT * 996 / 1000
 		);
 	});
 }
@@ -201,8 +201,8 @@ fn foreign_get_out_price_should_work() {
 		assert_eq!(target_amount, vec![1003010030091274, 100000000]);
 
 		assert!(
-			*target_amount.first().unwrap() > DOT_UNIT * 1003 / 1000 &&
-				*target_amount.first().unwrap() < DOT_UNIT * 1004 / 1000
+			*target_amount.first().unwrap() > DOT_UNIT * 1003 / 1000
+				&& *target_amount.first().unwrap() < DOT_UNIT * 1004 / 1000
 		);
 
 		let path = vec![BTC_ASSET_ID, DOT_ASSET_ID];
@@ -213,8 +213,8 @@ fn foreign_get_out_price_should_work() {
 		assert_eq!(target_amount, vec![100301004, 1000000000000000]);
 
 		assert!(
-			*target_amount.first().unwrap() > BTC_UNIT * 1003 / 1000 &&
-				*target_amount.first().unwrap() < BTC_UNIT * 1004 / 1000
+			*target_amount.first().unwrap() > BTC_UNIT * 1003 / 1000
+				&& *target_amount.first().unwrap() < BTC_UNIT * 1004 / 1000
 		);
 	});
 }
@@ -392,8 +392,8 @@ fn inner_swap_assets_for_exact_assets_should_work() {
 		assert_eq!(btc_balance, amount_out);
 
 		let amount_in_dot =
-			total_supply_dot -
-				supply_dot - <Test as Config>::MultiAssetsHandler::balance_of(DOT_ASSET_ID, &ALICE);
+			total_supply_dot
+				- supply_dot - <Test as Config>::MultiAssetsHandler::balance_of(DOT_ASSET_ID, &ALICE);
 
 		// println!("amount in {}", amount_in_dot);
 		assert_eq!(amount_in_dot, 1003209669015047);
@@ -418,8 +418,8 @@ fn inner_swap_assets_for_exact_assets_should_work() {
 		assert_eq!(dot_balance, amount_out);
 
 		let amount_in_btc =
-			total_supply_btc -
-				supply_btc - <Test as Config>::MultiAssetsHandler::balance_of(BTC_ASSET_ID, &ALICE);
+			total_supply_btc
+				- supply_btc - <Test as Config>::MultiAssetsHandler::balance_of(BTC_ASSET_ID, &ALICE);
 
 		// println!("amount in {}", amount_in_btc);
 		assert_eq!(amount_in_btc, 100280779);

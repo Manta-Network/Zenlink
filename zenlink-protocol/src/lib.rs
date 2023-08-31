@@ -17,24 +17,18 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::unused_unit)]
 
-#[cfg(feature = "std")]
-use serde::{Deserialize, Serialize};
-
 use codec::{Decode, Encode, FullCodec};
 use frame_support::{
 	dispatch::Vec,
 	pallet_prelude::*,
 	sp_runtime::SaturatedConversion,
 	traits::{
-		Currency, ExistenceRequirement, ExistenceRequirement::AllowDeath, GenesisBuild, Get,
-		WithdrawReasons,
+		Currency, ExistenceRequirement, ExistenceRequirement::AllowDeath, Get, WithdrawReasons,
 	},
 	PalletId, RuntimeDebug,
 };
 use sp_core::U256;
-use sp_runtime::traits::{
-	AccountIdConversion, Hash, MaybeSerializeDeserialize, One, StaticLookup, Zero,
-};
+use sp_runtime::traits::{AccountIdConversion, Hash, One, StaticLookup, Zero};
 use sp_std::{
 	collections::btree_map::BTreeMap, convert::TryInto, fmt::Debug, marker::PhantomData, prelude::*,
 };
@@ -93,7 +87,6 @@ pub mod pallet {
 			+ Ord
 			+ PartialOrd
 			+ Copy
-			+ MaybeSerializeDeserialize
 			+ AssetInfo
 			+ Debug
 			+ scale_info::TypeInfo
@@ -112,7 +105,6 @@ pub mod pallet {
 
 	#[pallet::pallet]
 	#[pallet::without_storage_info]
-	#[pallet::generate_store(pub(super) trait Store)]
 	pub struct Pallet<T>(_);
 
 	/// Foreign foreign storage
@@ -218,34 +210,10 @@ pub mod pallet {
 		pub fee_point: u8,
 	}
 
-	// #[cfg(feature = "std")]
-	// impl<T: Config> Default for GenesisConfig<T> {
-	// 	fn default() -> Self {
-	// 		Self { fee_receiver: None, fee_point: 5 }
-	// 	}
-	// }
-
 	#[pallet::genesis_build]
-	impl<T: Config> GenesisBuild<T> for GenesisConfig<T> {
+	impl<T: Config> BuildGenesisConfig for GenesisConfig<T> {
 		fn build(&self) {
 			<FeeMeta<T>>::put((&self.fee_receiver, &self.fee_point));
-		}
-	}
-
-	#[cfg(feature = "std")]
-	impl<T: Config> GenesisConfig<T> {
-		/// Direct implementation of `GenesisBuild::build_storage`.
-		///
-		/// Kept in order not to break dependency.
-		pub fn build_storage(&self) -> Result<sp_runtime::Storage, String> {
-			<Self as GenesisBuild<T>>::build_storage(self)
-		}
-
-		/// Direct implementation of `GenesisBuild::assimilate_storage`.
-		///
-		/// Kept in order not to break dependency.
-		pub fn assimilate_storage(&self, storage: &mut sp_runtime::Storage) -> Result<(), String> {
-			<Self as GenesisBuild<T>>::assimilate_storage(self, storage)
 		}
 	}
 
@@ -534,7 +502,7 @@ pub mod pallet {
 			let pair = Self::sort_asset_id(asset_0, asset_1);
 			PairStatuses::<T>::try_mutate(pair, |status| match status {
 				Trading(_) => Err(Error::<T>::PairAlreadyExists),
-				Bootstrap(params) =>
+				Bootstrap(params) => {
 					if Self::bootstrap_disable(params) {
 						BootstrapEndStatus::<T>::insert(pair, Bootstrap((*params).clone()));
 
@@ -545,7 +513,8 @@ pub mod pallet {
 						Ok(())
 					} else {
 						Err(Error::<T>::PairAlreadyExists)
-					},
+					}
+				},
 				Disable => {
 					*status = Trading(PairMetadata {
 						pair_account: Self::pair_account_id(pair.0, pair.1),
@@ -773,7 +742,7 @@ pub mod pallet {
 						let exist_rewards = BootstrapRewards::<T>::get(pair);
 						for (_, exist_reward) in exist_rewards {
 							if exist_reward != Zero::zero() {
-								return Err(Error::<T>::ExistRewardsInBootstrap)
+								return Err(Error::<T>::ExistRewardsInBootstrap);
 							}
 						}
 
@@ -974,7 +943,7 @@ pub mod pallet {
 					let exist_rewards = BootstrapRewards::<T>::get(pair);
 					for (_, exist_reward) in exist_rewards {
 						if exist_reward != Zero::zero() {
-							return Err(Error::<T>::ExistRewardsInBootstrap)
+							return Err(Error::<T>::ExistRewardsInBootstrap);
 						}
 					}
 

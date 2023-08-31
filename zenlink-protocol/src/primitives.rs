@@ -30,7 +30,7 @@ pub const RESERVED: u8 = 3;
 	TypeInfo,
 	MaxEncodedLen,
 )]
-#[cfg_attr(feature = "std", derive(Serialize, Deserialize, Default))]
+#[cfg_attr(feature = "std", derive(serde::Serialize, serde::Deserialize))]
 pub struct AssetId {
 	/// Parachain ID
 	pub chain_id: u32,

@@ -412,12 +412,12 @@ impl<T: Config> Pallet<T> {
 		reserve_1: AssetBalance,
 	) -> Result<(AssetBalance, AssetBalance), DispatchError> {
 		if reserve_0 == Zero::zero() || reserve_1 == Zero::zero() {
-			return Ok((amount_0_desired, amount_1_desired))
+			return Ok((amount_0_desired, amount_1_desired));
 		}
 		let amount_1_optimal = Self::calculate_share_amount(amount_0_desired, reserve_0, reserve_1);
 		if amount_1_optimal <= amount_1_desired {
 			ensure!(amount_1_optimal >= amount_1_min, Error::<T>::IncorrectAssetAmountRange);
-			return Ok((amount_0_desired, amount_1_optimal))
+			return Ok((amount_0_desired, amount_1_optimal));
 		}
 		let amount_0_optimal = Self::calculate_share_amount(amount_1_desired, reserve_1, reserve_0);
 		ensure!(
@@ -662,8 +662,8 @@ impl<T: Config> Pallet<T> {
 		let mut bootstrap_parameter = match Self::pair_status(pair) {
 			PairStatus::Bootstrap(bootstrap_parameter) => {
 				ensure!(
-					frame_system::Pallet::<T>::block_number() <
-						bootstrap_parameter.end_block_number,
+					frame_system::Pallet::<T>::block_number()
+						< bootstrap_parameter.end_block_number,
 					Error::<T>::NotInBootstrap
 				);
 				bootstrap_parameter
@@ -678,8 +678,8 @@ impl<T: Config> Pallet<T> {
 
 		if amount_0_contribute
 			.checked_add(bootstrap_parameter.accumulated_supply.0)
-			.ok_or(Error::<T>::Overflow)? >
-			bootstrap_parameter.capacity_supply.0
+			.ok_or(Error::<T>::Overflow)?
+			> bootstrap_parameter.capacity_supply.0
 		{
 			amount_0_contribute = bootstrap_parameter
 				.capacity_supply
@@ -690,8 +690,8 @@ impl<T: Config> Pallet<T> {
 
 		if amount_1_contribute
 			.checked_add(bootstrap_parameter.accumulated_supply.1)
-			.ok_or(Error::<T>::Overflow)? >
-			bootstrap_parameter.capacity_supply.1
+			.ok_or(Error::<T>::Overflow)?
+			> bootstrap_parameter.capacity_supply.1
 		{
 			amount_1_contribute = bootstrap_parameter
 				.capacity_supply
@@ -746,12 +746,12 @@ impl<T: Config> Pallet<T> {
 		match Self::pair_status(pair) {
 			Bootstrap(bootstrap_parameter) => {
 				ensure!(
-					frame_system::Pallet::<T>::block_number() >=
-						bootstrap_parameter.end_block_number &&
-						bootstrap_parameter.accumulated_supply.0 >=
-							bootstrap_parameter.target_supply.0 &&
-						bootstrap_parameter.accumulated_supply.1 >=
-							bootstrap_parameter.target_supply.1,
+					frame_system::Pallet::<T>::block_number()
+						>= bootstrap_parameter.end_block_number
+						&& bootstrap_parameter.accumulated_supply.0
+							>= bootstrap_parameter.target_supply.0
+						&& bootstrap_parameter.accumulated_supply.1
+							>= bootstrap_parameter.target_supply.1,
 					Error::<T>::UnqualifiedBootstrap
 				);
 
@@ -815,7 +815,7 @@ impl<T: Config> Pallet<T> {
 	) -> DispatchResult {
 		let pair = Self::sort_asset_id(asset_0, asset_1);
 		match Self::pair_status(pair) {
-			Trading(_) =>
+			Trading(_) => {
 				BootstrapPersonalSupply::<T>::try_mutate_exists((pair, &who), |contribution| {
 					if let Some((amount_0_contribute, amount_1_contribute)) = contribution.take() {
 						if let Bootstrap(bootstrap_parameter) = Self::bootstrap_end_status(pair) {
@@ -920,7 +920,8 @@ impl<T: Config> Pallet<T> {
 					} else {
 						Err(Error::<T>::ZeroContribute.into())
 					}
-				}),
+				})
+			},
 			_ => Err(Error::<T>::NotInBootstrap.into()),
 		}
 	}
@@ -936,12 +937,13 @@ impl<T: Config> Pallet<T> {
 			Bootstrap(params) => {
 				ensure!(Self::bootstrap_disable(&params), Error::<T>::DenyRefund);
 			},
-			_ =>
+			_ => {
 				if let Bootstrap(bootstrap_parameter) = Self::bootstrap_end_status(pair) {
 					ensure!(Self::bootstrap_disable(&bootstrap_parameter), Error::<T>::DenyRefund);
 				} else {
-					return Err(Error::<T>::DenyRefund.into())
-				},
+					return Err(Error::<T>::DenyRefund.into());
+				}
+			},
 		};
 
 		BootstrapPersonalSupply::<T>::try_mutate_exists(
@@ -1005,11 +1007,11 @@ impl<T: Config> Pallet<T> {
 		params: &BootstrapParameter<AssetBalance, BlockNumberFor<T>, T::AccountId>,
 	) -> bool {
 		let now = frame_system::Pallet::<T>::block_number();
-		if now > params.end_block_number &&
-			(params.accumulated_supply.0 < params.target_supply.0 ||
-				params.accumulated_supply.1 < params.target_supply.1)
+		if now > params.end_block_number
+			&& (params.accumulated_supply.0 < params.target_supply.0
+				|| params.accumulated_supply.1 < params.target_supply.1)
 		{
-			return true
+			return true;
 		}
 		false
 	}
@@ -1024,7 +1026,7 @@ impl<T: Config> Pallet<T> {
 
 		for (asset_id, limit) in limits.into_iter() {
 			if T::MultiAssetsHandler::balance_of(asset_id, account) < limit {
-				return false
+				return false;
 			}
 		}
 

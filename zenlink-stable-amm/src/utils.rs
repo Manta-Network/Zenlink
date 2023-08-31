@@ -16,7 +16,7 @@ impl<T: Config> Pallet<T> {
 		let n_currencies = Balance::from(balances.len() as u64);
 		let sum = Self::sum_of(balances)?;
 		if sum == Balance::default() {
-			return Some(Balance::default())
+			return Some(Balance::default());
 		}
 		let mut d_prev: U256;
 		let mut d = U256::from(sum);
@@ -51,7 +51,7 @@ impl<T: Config> Pallet<T> {
 			d = numerator.checked_div(denominator)?;
 
 			if Self::distance::<U256>(d, d_prev) <= U256::from(1u32) {
-				return TryInto::<Balance>::try_into(d).ok()
+				return TryInto::<Balance>::try_into(d).ok();
 			}
 		}
 		None
@@ -76,7 +76,7 @@ impl<T: Config> Pallet<T> {
 			normalized_balances.iter().enumerate().take(pool_currencies_len)
 		{
 			if i == out_index {
-				continue
+				continue;
 			}
 			let x: Balance = if i == in_index { in_balance } else { *normalized_balance };
 
@@ -101,7 +101,7 @@ impl<T: Config> Pallet<T> {
 				.checked_add(c)?
 				.checked_div(U256::from(2u32).checked_mul(y)?.checked_add(b)?.checked_sub(d)?)?;
 			if Self::distance(last_y, y) <= U256::from(1) {
-				return TryInto::<Balance>::try_into(y).ok()
+				return TryInto::<Balance>::try_into(y).ok();
 			}
 		}
 
@@ -117,7 +117,7 @@ impl<T: Config> Pallet<T> {
 	) -> Option<Balance> {
 		let currencies_len = pool.currency_ids.len();
 		if index >= currencies_len as u32 {
-			return None
+			return None;
 		}
 
 		let n_currencies = U256::from(currencies_len as u64);
@@ -129,7 +129,7 @@ impl<T: Config> Pallet<T> {
 
 		for (i, x) in xp.iter().enumerate() {
 			if i as u32 == index {
-				continue
+				continue;
 			}
 			s = s.checked_add(U256::from(*x))?;
 			c = c
@@ -152,7 +152,7 @@ impl<T: Config> Pallet<T> {
 			)?;
 
 			if Self::distance(y, y_prev) <= U256::from(1) {
-				return TryInto::<Balance>::try_into(y).ok()
+				return TryInto::<Balance>::try_into(y).ok();
 			}
 		}
 
@@ -187,7 +187,7 @@ impl<T: Config> Pallet<T> {
 		let now = T::TimeProvider::now().as_secs() as Number;
 
 		if now >= pool.future_a_time {
-			return Some(pool.future_a)
+			return Some(pool.future_a);
 		}
 
 		let future_a = U256::from(pool.future_a);
@@ -204,7 +204,7 @@ impl<T: Config> Pallet<T> {
 						.checked_mul(now.checked_sub(initial_a_time)?)?
 						.checked_div(future_a_time.checked_sub(initial_a_time)?)?,
 				)
-				.and_then(|n| TryInto::<Balance>::try_into(n).ok())
+				.and_then(|n| TryInto::<Balance>::try_into(n).ok());
 		}
 
 		initial_a
