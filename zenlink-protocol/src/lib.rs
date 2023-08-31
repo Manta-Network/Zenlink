@@ -196,6 +196,10 @@ pub mod pallet {
 		ValueQuery,
 	>;
 
+	#[pallet::storage]
+	#[pallet::getter(fn get_native_swap_fee_factor)]
+	pub type NativeSwapFeeFactor<T: Config> = StorageValue<_, u128, OptionQuery>;
+
 	#[pallet::genesis_config]
 	/// Refer: https://github.com/Uniswap/uniswap-v2-core/blob/master/contracts/UniswapV2Pair.sol#L88
 	pub struct GenesisConfig<T: Config> {

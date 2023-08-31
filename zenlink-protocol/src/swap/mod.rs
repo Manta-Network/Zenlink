@@ -10,7 +10,6 @@
 
 use super::*;
 use crate::swap::util::*;
-use primitives::AssetId;
 
 #[cfg(test)]
 mod mock;
@@ -217,16 +216,20 @@ impl<T: Config> Pallet<T> {
 	) -> DispatchResult {
 		let mut amount_in_less_native_swap_fee = amount_in;
 		if path[0].is_native(T::SelfParaId::get()) {
-			// charge 0.5% going to pallet account for later distribution
-			let native_swap_fee = amount_in.checked_div(200).unwrap_or_default();
-			amount_in_less_native_swap_fee = amount_in.saturating_sub(native_swap_fee);
-			let native_swap_fees_account = T::NativeSwapFeesPotId::get().into_account_truncating();
-			T::MultiAssetsHandler::transfer(
-				path[0],
-				who,
-				&native_swap_fees_account,
-				native_swap_fee,
-			)?;
+			if let Some(native_swap_fee_factor) = Self::get_native_swap_fee_factor() {
+				// charge a configurable % going to a pallet account for later distribution
+				let native_swap_fee =
+					amount_in.checked_div(native_swap_fee_factor).unwrap_or_default();
+				amount_in_less_native_swap_fee = amount_in.saturating_sub(native_swap_fee);
+				let native_swap_fees_account =
+					T::NativeSwapFeesPotId::get().into_account_truncating();
+				T::MultiAssetsHandler::transfer(
+					path[0],
+					who,
+					&native_swap_fees_account,
+					native_swap_fee,
+				)?;
+			}
 		}
 
 		let amounts = Self::get_amount_out_by_path(amount_in_less_native_swap_fee, path)?;
