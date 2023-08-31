@@ -42,9 +42,7 @@ pub struct AssetId {
 
 pub trait AssetInfo {
 	fn is_support(&self) -> bool;
-	fn is_native(&self, self_chain_id: u32) -> bool {
-		false
-	}
+	fn is_native(&self, self_chain_id: u32) -> bool;
 }
 
 impl AssetInfo for AssetId {
