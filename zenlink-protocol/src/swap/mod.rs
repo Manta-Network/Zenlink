@@ -214,12 +214,36 @@ impl<T: Config> Pallet<T> {
 		path: &[T::AssetId],
 		recipient: &T::AccountId,
 	) -> DispatchResult {
-		let amounts = Self::get_amount_out_by_path(amount_in, path)?;
+		let mut amount_in_less_native_swap_fee = amount_in;
+		if path[0].is_native(T::SelfParaId::get()) {
+			let native_swap_fee_factor = Self::get_native_swap_fee_factor();
+			if native_swap_fee_factor != 0u128 {
+				// charge a configurable % going to a pallet account for later distribution
+				let native_swap_fee =
+					amount_in.checked_div(native_swap_fee_factor).unwrap_or_default();
+				amount_in_less_native_swap_fee = amount_in.saturating_sub(native_swap_fee);
+				let native_swap_fees_account =
+					T::NativeSwapFeesPotId::get().into_account_truncating();
+				T::MultiAssetsHandler::transfer(
+					path[0],
+					who,
+					&native_swap_fees_account,
+					native_swap_fee,
+				)?;
+			}
+		}
+
+		let amounts = Self::get_amount_out_by_path(amount_in_less_native_swap_fee, path)?;
 		ensure!(amounts[amounts.len() - 1] >= amount_out_min, Error::<T>::InsufficientTargetAmount);
 
 		let pair_account = Self::pair_account_id(path[0], path[1]);
 
-		T::MultiAssetsHandler::transfer(path[0], who, &pair_account, amount_in)?;
+		T::MultiAssetsHandler::transfer(
+			path[0],
+			who,
+			&pair_account,
+			amount_in_less_native_swap_fee,
+		)?;
 		Self::swap(&amounts, path, recipient)?;
 
 		Self::deposit_event(Event::AssetSwap(

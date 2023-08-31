@@ -26,8 +26,7 @@ use crate as router;
 use crate::{Config, Pallet};
 use orml_traits::{parameter_type_with_key, MultiCurrency};
 use zenlink_protocol::{
-	AssetBalance, AssetId, AssetIdConverter, LocalAssetHandler, PairLpGenerate, ZenlinkMultiAssets,
-	LOCAL,
+	AssetBalance, AssetId, LocalAssetHandler, PairLpGenerate, ZenlinkMultiAssets, LOCAL,
 };
 use zenlink_stable_amm::traits::{StablePoolLpCurrencyIdGenerate, ValidateCurrency};
 
@@ -40,6 +39,7 @@ parameter_types! {
 	pub const BlockHashCount: u64 = 250;
 	pub const StableAmmPalletId: PalletId = PalletId(*b"/zlkSAmm");
 	pub const ZenlinkPalletId: PalletId = PalletId(*b"/zenlink");
+	pub const NativeSwapFeesPotId: PalletId = PalletId(*b"/swpfees");
 	pub const MaxReserves: u32 = 50;
 	pub const MaxLocks:u32 = 50;
 	pub const MinimumPeriod: Moment = SLOT_DURATION / 2;
@@ -210,13 +210,10 @@ impl zenlink_protocol::Config for Test {
 	type RuntimeEvent = RuntimeEvent;
 	type MultiAssetsHandler = ZenlinkMultiAssets<Zenlink, Balances, LocalAssetAdaptor<Tokens>>;
 	type PalletId = ZenlinkPalletId;
+	type NativeSwapFeesPotId = NativeSwapFeesPotId;
 	type AssetId = AssetId;
-	type LpGenerate = PairLpGenerate<Self>;
-	type TargetChains = ();
 	type SelfParaId = SelfParaId;
-	type XcmExecutor = ();
-	type AccountIdConverter = ();
-	type AssetIdConverter = AssetIdConverter;
+	type LpGenerate = PairLpGenerate<Self>;
 	type WeightInfo = ();
 }
 
