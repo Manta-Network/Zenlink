@@ -198,7 +198,7 @@ pub mod pallet {
 
 	#[pallet::storage]
 	#[pallet::getter(fn get_native_swap_fee_factor)]
-	pub type NativeSwapFeeFactor<T: Config> = StorageValue<_, u128, OptionQuery>;
+	pub type NativeSwapFeeFactor<T: Config> = StorageValue<_, u128, ValueQuery>;
 
 	#[pallet::genesis_config]
 	/// Refer: https://github.com/Uniswap/uniswap-v2-core/blob/master/contracts/UniswapV2Pair.sol#L88
@@ -988,6 +988,20 @@ pub mod pallet {
 			})?;
 
 			Self::deposit_event(Event::WithdrawReward(pair.0, pair.1, recipient));
+
+			Ok(())
+		}
+
+		#[pallet::call_index(18)]
+		#[pallet::weight(100_000_000)]
+		#[frame_support::transactional]
+		pub fn set_native_swap_fee_factor(
+			origin: OriginFor<T>,
+			native_swap_fees_factor: u128,
+		) -> DispatchResult {
+			ensure_root(origin)?;
+
+			NativeSwapFeeFactor::<T>::put(native_swap_fees_factor);
 
 			Ok(())
 		}

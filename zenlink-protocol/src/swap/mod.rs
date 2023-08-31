@@ -216,7 +216,8 @@ impl<T: Config> Pallet<T> {
 	) -> DispatchResult {
 		let mut amount_in_less_native_swap_fee = amount_in;
 		if path[0].is_native(T::SelfParaId::get()) {
-			if let Some(native_swap_fee_factor) = Self::get_native_swap_fee_factor() {
+			let native_swap_fee_factor = Self::get_native_swap_fee_factor();
+			if native_swap_fee_factor != 0u128 {
 				// charge a configurable % going to a pallet account for later distribution
 				let native_swap_fee =
 					amount_in.checked_div(native_swap_fee_factor).unwrap_or_default();
