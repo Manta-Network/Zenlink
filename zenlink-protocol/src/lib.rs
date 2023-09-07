@@ -389,13 +389,21 @@ pub mod pallet {
 		ZeroLiquidity,
 		/// Can't find pair though trading path.
 		InvalidPath,
+		/// 1.
 		InvalidPath1,
+		/// 2.
 		InvalidPath2,
+		/// 3.
 		InvalidPath3,
+		/// 4.
 		InvalidPath4,
+		/// 5.
 		InvalidPath5,
+		/// 6.
 		InvalidPath6,
+		/// 7.
 		InvalidPath7,
+		/// 8.
 		InvalidPath8,
 		/// Incorrect foreign amount range.
 		IncorrectAssetAmountRange,
