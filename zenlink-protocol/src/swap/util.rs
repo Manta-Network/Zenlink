@@ -174,7 +174,7 @@ impl<T: Config> Pallet<T> {
 		path: &[T::AssetId],
 	) -> Result<Vec<AssetBalance>, DispatchError> {
 		let len = path.len();
-		ensure!(len > 1, Error::<T>::3);
+		ensure!(len > 1, Error::<T>::InvalidPath3);
 
 		let mut i = len - 1;
 		let mut out_vec = vec![amount_out];
