@@ -389,6 +389,14 @@ pub mod pallet {
 		ZeroLiquidity,
 		/// Can't find pair though trading path.
 		InvalidPath,
+		InvalidPath1,
+		InvalidPath2,
+		InvalidPath3,
+		InvalidPath4,
+		InvalidPath5,
+		InvalidPath6,
+		InvalidPath7,
+		InvalidPath8,
 		/// Incorrect foreign amount range.
 		IncorrectAssetAmountRange,
 		/// Overflow.

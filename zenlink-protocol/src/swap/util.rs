@@ -174,7 +174,7 @@ impl<T: Config> Pallet<T> {
 		path: &[T::AssetId],
 	) -> Result<Vec<AssetBalance>, DispatchError> {
 		let len = path.len();
-		ensure!(len > 1, Error::<T>::InvalidPath);
+		ensure!(len > 1, Error::<T>::3);
 
 		let mut i = len - 1;
 		let mut out_vec = vec![amount_out];
@@ -184,10 +184,10 @@ impl<T: Config> Pallet<T> {
 			let reserve_0 = T::MultiAssetsHandler::balance_of(path[i], &pair_account);
 			let reserve_1 = T::MultiAssetsHandler::balance_of(path[i - 1], &pair_account);
 
-			ensure!(reserve_1 > Zero::zero() && reserve_0 > Zero::zero(), Error::<T>::InvalidPath);
+			ensure!(reserve_1 > Zero::zero() && reserve_0 > Zero::zero(), Error::<T>::InvalidPath1);
 
 			let amount = Self::get_amount_in(out_vec[len - 1 - i], reserve_1, reserve_0)?;
-			ensure!(amount > One::one(), Error::<T>::InvalidPath);
+			ensure!(amount > One::one(), Error::<T>::InvalidPath2);
 
 			// check K
 			let invariant_before_swap: U256 = U256::from(reserve_0)
@@ -218,7 +218,7 @@ impl<T: Config> Pallet<T> {
 		amount_in: AssetBalance,
 		path: &[T::AssetId],
 	) -> Result<Vec<AssetBalance>, DispatchError> {
-		ensure!(path.len() > 1, Error::<T>::InvalidPath);
+		ensure!(path.len() > 1, Error::<T>::InvalidPath4);
 
 		let len = path.len() - 1;
 		let mut out_vec = vec![amount_in];
@@ -228,10 +228,10 @@ impl<T: Config> Pallet<T> {
 			let reserve_0 = T::MultiAssetsHandler::balance_of(path[i], &pair_account);
 			let reserve_1 = T::MultiAssetsHandler::balance_of(path[i + 1], &pair_account);
 
-			ensure!(reserve_1 > Zero::zero() && reserve_0 > Zero::zero(), Error::<T>::InvalidPath);
+			ensure!(reserve_1 > Zero::zero() && reserve_0 > Zero::zero(), Error::<T>::InvalidPath5);
 
 			let amount = Self::get_amount_out(out_vec[i], reserve_0, reserve_1)?;
-			ensure!(amount > Zero::zero(), Error::<T>::InvalidPath);
+			ensure!(amount > Zero::zero(), Error::<T>::InvalidPath6);
 
 			// check K
 			let invariant_before_swap: U256 = U256::from(reserve_0)

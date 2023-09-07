@@ -134,7 +134,7 @@ pub mod pallet {
 		InvalidRoutes,
 		ConvertCurrencyFailed,
 		AmountSlippage,
-		InvalidPath,
+		InvalidPath0,
 	}
 
 	#[pallet::call]
@@ -171,7 +171,7 @@ pub mod pallet {
 							T::NormalAmm::get_amount_out_by_path(amount_out.into(), path)?;
 						Self::swap(&who, amount_out, path, &receiver)?;
 						amount_out =
-							T::Balance::from(*amounts.last().ok_or(Error::<T>::InvalidPath)?);
+							T::Balance::from(*amounts.last().ok_or(Error::<T>::InvalidPath0)?);
 					},
 				}
 			}
