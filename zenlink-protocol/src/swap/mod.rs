@@ -230,8 +230,6 @@ impl<T: Config> Pallet<T> {
 					&native_swap_fees_account,
 					native_swap_fee,
 				)?;
-
-				Self::deposit_event(Event::FeePaidTo(native_swap_fees_account));
 			}
 		}
 

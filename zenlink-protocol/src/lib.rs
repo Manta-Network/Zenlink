@@ -261,7 +261,6 @@ pub mod pallet {
 
 		/// Create a trading pair. \[asset_0, asset_1\]
 		PairCreated(T::AssetId, T::AssetId),
-		FeePaidTo(T::AccountId),
 		/// Add liquidity. \[owner, asset_0, asset_1, add_balance_0, add_balance_1,
 		/// mint_balance_lp\]
 		LiquidityAdded(
