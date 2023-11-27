@@ -107,9 +107,9 @@ impl TryFrom<CurrencyId> for ZenlinkAssetId {
 			CurrencyId::LPToken(symbol0, symbol1) => Ok(ZenlinkAssetId {
 				chain_id: PARA_CHAIN_ID,
 				asset_type: LOCAL,
-				asset_index: (LP_DISCRIMINANT << 8) +
-					((symbol0 as u64 & 0xffff) << 16) +
-					((symbol1 as u64 & 0xffff) << 32),
+				asset_index: (LP_DISCRIMINANT << 8)
+					+ ((symbol0 as u64 & 0xffff) << 16)
+					+ ((symbol1 as u64 & 0xffff) << 32),
 			}),
 			_ => Err(()),
 		}
@@ -120,7 +120,7 @@ impl TryFrom<ZenlinkAssetId> for CurrencyId {
 	type Error = ();
 	fn try_from(asset_id: ZenlinkAssetId) -> Result<Self, Self::Error> {
 		if asset_id.is_native(PARA_CHAIN_ID) {
-			return Ok(CurrencyId::Native(TokenSymbol::try_from(asset_id.asset_index as u8)?))
+			return Ok(CurrencyId::Native(TokenSymbol::try_from(asset_id.asset_index as u8)?));
 		}
 
 		let discriminant = (asset_id.asset_index & 0x0000_0000_0000_ff00) >> 8;
@@ -136,7 +136,7 @@ impl TryFrom<ZenlinkAssetId> for CurrencyId {
 			Ok(CurrencyId::Token(TokenSymbol::try_from(token_id)?))
 		} else {
 			Err(())
-		}
+		};
 	}
 }
 

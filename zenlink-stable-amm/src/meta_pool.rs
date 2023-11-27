@@ -214,8 +214,8 @@ impl<T: Config> Pallet<T> {
 	) -> Result<Balance, DispatchError> {
 		let total_supply = T::MultiCurrency::total_issuance(meta_pool.info.lp_currency_id);
 		ensure!(
-			T::MultiCurrency::free_balance(meta_pool.info.lp_currency_id, who) >= lp_amount &&
-				lp_amount <= total_supply,
+			T::MultiCurrency::free_balance(meta_pool.info.lp_currency_id, who) >= lp_amount
+				&& lp_amount <= total_supply,
 			Error::<T>::InsufficientSupply
 		);
 		ensure!(
@@ -350,9 +350,9 @@ impl<T: Config> Pallet<T> {
 
 		let max_range = base_lp_currency_index + meta_pool.base_currencies.len();
 		ensure!(
-			currency_index_from != currency_index_to &&
-				currency_index_from < max_range &&
-				currency_index_to < max_range,
+			currency_index_from != currency_index_to
+				&& currency_index_from < max_range
+				&& currency_index_to < max_range,
 			Error::<T>::MismatchParameter
 		);
 
@@ -380,8 +380,8 @@ impl<T: Config> Pallet<T> {
 
 		let mut dx = Self::do_transfer_in(currency_from, who, &meta_pool.info.account, in_amount)?;
 		let mut dy: Balance;
-		if currency_index_from < base_lp_currency_index ||
-			currency_index_to < base_lp_currency_index
+		if currency_index_from < base_lp_currency_index
+			|| currency_index_to < base_lp_currency_index
 		{
 			let old_balances = meta_pool.info.balances.clone();
 
@@ -550,7 +550,7 @@ impl<T: Config> Pallet<T> {
 			return U256::from(d)
 				.checked_mul(U256::from(BASE_VIRTUAL_PRICE_PRECISION))
 				.and_then(|n| n.checked_div(U256::from(supply)))
-				.and_then(|n| TryInto::<Balance>::try_into(n).ok())
+				.and_then(|n| TryInto::<Balance>::try_into(n).ok());
 		}
 		None
 	}
@@ -584,7 +584,7 @@ impl<T: Config> Pallet<T> {
 			return match pool {
 				Pool::Base(bp) => Self::calculate_base_virtual_price(&bp),
 				Pool::Meta(mp) => Self::calculate_meta_virtual_price(&mp),
-			}
+			};
 		}
 		Some(meta_pool.base_virtual_price)
 	}
@@ -601,7 +601,7 @@ impl<T: Config> Pallet<T> {
 		total_supply: Balance,
 	) -> Option<(Balance, Balance)> {
 		if index >= meta_pool.info.currency_ids.len() {
-			return None
+			return None;
 		}
 
 		let base_virtual_price = Self::meta_pool_base_virtual_price(meta_pool)?;
@@ -721,7 +721,7 @@ impl<T: Config> Pallet<T> {
 		let total_supply = T::MultiCurrency::total_issuance(meta_pool.info.lp_currency_id);
 
 		if total_supply.is_zero() {
-			return Ok(d1) // first depositor take it all
+			return Ok(d1); // first depositor take it all
 		}
 
 		let diff: Balance = if deposit {
@@ -826,7 +826,7 @@ impl<T: Config> Pallet<T> {
 	) -> Option<(Balance, Balance)> {
 		let n_currencies = meta_pool.info.currency_ids.len();
 		if i == j || i >= n_currencies || j >= n_currencies {
-			return None
+			return None;
 		}
 		let xp = Self::meta_pool_xp(
 			&meta_pool.info.balances,
@@ -899,9 +899,9 @@ impl<T: Config> Pallet<T> {
 		let currency_index_to = currency_index_to;
 
 		ensure!(
-			currency_index_from != currency_index_to &&
-				currency_index_from < max_range &&
-				currency_index_to < max_range,
+			currency_index_from != currency_index_to
+				&& currency_index_from < max_range
+				&& currency_index_to < max_range,
 			Error::<T>::MismatchParameter
 		);
 
@@ -956,7 +956,7 @@ impl<T: Config> Pallet<T> {
 					currency_index_to - base_lp_currency_index,
 					in_amount,
 				)
-				.ok_or_else(|| Error::<T>::Arithmetic.into())
+				.ok_or_else(|| Error::<T>::Arithmetic.into());
 			}
 			currency_index_from = base_lp_currency_index;
 		}

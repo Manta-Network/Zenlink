@@ -256,8 +256,8 @@ impl<T: Config> Pallet<T> {
 		let total_supply = T::MultiCurrency::total_issuance(pool.lp_currency_id);
 		ensure!(total_supply > Zero::zero(), Error::<T>::InsufficientLpReserve);
 		ensure!(
-			T::MultiCurrency::free_balance(pool.lp_currency_id, who) >= lp_amount &&
-				lp_amount <= total_supply,
+			T::MultiCurrency::free_balance(pool.lp_currency_id, who) >= lp_amount
+				&& lp_amount <= total_supply,
 			Error::<T>::InsufficientSupply
 		);
 		ensure!(index < pool.currency_ids.len() as u32, Error::<T>::CurrencyIndexOutRange);
@@ -352,7 +352,7 @@ impl<T: Config> Pallet<T> {
 				.checked_pow(U256::from(POOL_TOKEN_COMMON_DECIMALS))
 				.and_then(|n| n.checked_mul(U256::from(d)))
 				.and_then(|n| n.checked_div(U256::from(total_supply)))
-				.and_then(|n| TryInto::<Balance>::try_into(n).ok())
+				.and_then(|n| TryInto::<Balance>::try_into(n).ok());
 		}
 		None
 	}
@@ -416,7 +416,7 @@ impl<T: Config> Pallet<T> {
 		index: u32,
 	) -> Option<(Balance, Balance)> {
 		if index >= pool.currency_ids.len() as u32 {
-			return None
+			return None;
 		}
 		let total_supply = T::MultiCurrency::total_issuance(pool.lp_currency_id);
 
@@ -484,7 +484,7 @@ impl<T: Config> Pallet<T> {
 	) -> Option<Balance> {
 		let n_currencies = pool.currency_ids.len();
 		if i == j || i >= n_currencies || j >= n_currencies {
-			return None
+			return None;
 		}
 
 		let normalized_balances = Self::xp(&pool.balances, &pool.token_multipliers)?;
@@ -563,7 +563,7 @@ impl<T: Config> Pallet<T> {
 	) -> Option<Vec<Balance>> {
 		let lp_total_supply = T::MultiCurrency::total_issuance(pool.lp_currency_id);
 		if lp_total_supply < amount {
-			return None
+			return None;
 		}
 		let mut amounts = Vec::new();
 		for b in pool.balances.iter() {
@@ -607,7 +607,7 @@ impl<T: Config> Pallet<T> {
 		let total_supply = T::MultiCurrency::total_issuance(pool.lp_currency_id);
 
 		if total_supply.is_zero() {
-			return Ok(d1) // first depositor take it all
+			return Ok(d1); // first depositor take it all
 		}
 
 		let diff: Balance = if deposit {

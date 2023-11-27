@@ -532,7 +532,7 @@ pub mod pallet {
 			let pair = Self::sort_asset_id(asset_0, asset_1);
 			PairStatuses::<T>::try_mutate(pair, |status| match status {
 				Trading(_) => Err(Error::<T>::PairAlreadyExists),
-				Bootstrap(params) =>
+				Bootstrap(params) => {
 					if Self::bootstrap_disable(params) {
 						BootstrapEndStatus::<T>::insert(pair, Bootstrap((*params).clone()));
 
@@ -543,7 +543,8 @@ pub mod pallet {
 						Ok(())
 					} else {
 						Err(Error::<T>::PairAlreadyExists)
-					},
+					}
+				},
 				Disable => {
 					*status = Trading(PairMetadata {
 						pair_account: Self::pair_account_id(pair.0, pair.1),
@@ -771,7 +772,7 @@ pub mod pallet {
 						let exist_rewards = BootstrapRewards::<T>::get(pair);
 						for (_, exist_reward) in exist_rewards {
 							if exist_reward != Zero::zero() {
-								return Err(Error::<T>::ExistRewardsInBootstrap)
+								return Err(Error::<T>::ExistRewardsInBootstrap);
 							}
 						}
 
@@ -972,7 +973,7 @@ pub mod pallet {
 					let exist_rewards = BootstrapRewards::<T>::get(pair);
 					for (_, exist_reward) in exist_rewards {
 						if exist_reward != Zero::zero() {
-							return Err(Error::<T>::ExistRewardsInBootstrap)
+							return Err(Error::<T>::ExistRewardsInBootstrap);
 						}
 					}
 

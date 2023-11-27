@@ -197,11 +197,11 @@ fn asset_id_to_currency_id(asset_id: &AssetId) -> Result<CurrencyId, ()> {
 	if asset_id.asset_type == LIQUIDITY {
 		let token0_id = ((asset_id.asset_index & 0xFFFF0000) >> 16) as u8;
 		let token1_id = (asset_id.asset_index & 0x0000FFFF) as u8;
-		return Ok(CurrencyId::ZenlinkLp(token0_id, token1_id))
+		return Ok(CurrencyId::ZenlinkLp(token0_id, token1_id));
 	}
 	if asset_id.asset_type == LOCAL {
 		let token_id = asset_id.asset_index as u8;
-		return Ok(CurrencyId::Token(token_id))
+		return Ok(CurrencyId::Token(token_id));
 	}
 	Err(())
 }

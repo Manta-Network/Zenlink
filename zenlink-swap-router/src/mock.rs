@@ -26,8 +26,7 @@ use crate as router;
 use crate::{Config, Pallet};
 use orml_traits::{parameter_type_with_key, MultiCurrency};
 use zenlink_protocol::{
-	AssetBalance, AssetId, LocalAssetHandler, PairLpGenerate, ZenlinkMultiAssets,
-	LOCAL,
+	AssetBalance, AssetId, LocalAssetHandler, PairLpGenerate, ZenlinkMultiAssets, LOCAL,
 };
 use zenlink_stable_amm::traits::{StablePoolLpCurrencyIdGenerate, ValidateCurrency};
 
@@ -238,7 +237,7 @@ pub struct PoolLpGenerate;
 
 impl StablePoolLpCurrencyIdGenerate<CurrencyId, PoolId> for PoolLpGenerate {
 	fn generate_by_pool_id(pool_id: PoolId) -> CurrencyId {
-		return CurrencyId::StableLPV2(pool_id)
+		return CurrencyId::StableLPV2(pool_id);
 	}
 }
 
@@ -249,7 +248,7 @@ where
 	fn validate_pooled_currency(currencies: &[CurrencyId]) -> bool {
 		for currency in currencies.iter() {
 			if let CurrencyId::Forbidden(_) = *currency {
-				return false
+				return false;
 			}
 		}
 		true
@@ -257,11 +256,11 @@ where
 
 	fn validate_pool_lp_currency(currency_id: CurrencyId) -> bool {
 		if let CurrencyId::Token(_) = currency_id {
-			return false
+			return false;
 		}
 
 		if Local::total_issuance(currency_id) > Zero::zero() {
-			return false
+			return false;
 		}
 		true
 	}
@@ -277,7 +276,7 @@ pub fn asset_id_to_currency_id(asset_id: &AssetId) -> Result<CurrencyId, ()> {
 		let token_id = asset_id.asset_index as u8;
 
 		Ok(CurrencyId::Token(token_id))
-	}
+	};
 }
 
 pub struct LocalAssetAdaptor<Local>(PhantomData<Local>);

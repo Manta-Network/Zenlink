@@ -467,7 +467,7 @@ pub mod pallet {
 								|update_state| -> DispatchResult {
 									if let Some(state) = update_state {
 										if state.inherit {
-											return Ok(())
+											return Ok(());
 										}
 										state.inherit = true;
 										state.score = last_update_pool_state.total_amount;
@@ -532,7 +532,7 @@ impl<T: Config> Pallet<T> {
 				Self::vote_period(current_period_id).ok_or(Error::<T>::InvalidPeriodId)?;
 
 			if current_period.end > now {
-				return Ok(())
+				return Ok(());
 			}
 			VotePeriods::<T>::try_mutate(*next_period_id, |period| -> DispatchResult {
 				let vote_set_window = Self::vote_set_window();
@@ -576,7 +576,7 @@ impl<T: Config> Pallet<T> {
 		mut now: Timestamp,
 	) -> DispatchResult {
 		if !pool_state.votable {
-			return Err(Error::<T>::NonVotablePool.into())
+			return Err(Error::<T>::NonVotablePool.into());
 		}
 		let vote_currency = Self::vote_currency().ok_or(Error::<T>::Uninitialized)?;
 		let pallet_account = T::PalletId::get().into_account_truncating();
@@ -692,7 +692,7 @@ impl<T: Config> Pallet<T> {
 		current_period_id: PeriodId,
 	) -> DispatchResult {
 		if current_period_id == 0 || pool_state.inherit {
-			return Ok(())
+			return Ok(());
 		}
 
 		let last_update_period_id = Self::pool_last_update_period(pool_id).unwrap_or_default();

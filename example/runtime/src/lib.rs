@@ -32,9 +32,11 @@ use frame_support::{
 	parameter_types,
 	traits::{Contains, Everything},
 	weights::{
-		constants::{WEIGHT_REF_TIME_PER_SECOND, BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight},
-		ConstantMultiplier, Weight, WeightToFeeCoefficient,
-		WeightToFeeCoefficients, WeightToFeePolynomial,
+		constants::{
+			BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_REF_TIME_PER_SECOND,
+		},
+		ConstantMultiplier, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
+		WeightToFeePolynomial,
 	},
 	PalletId,
 };
@@ -54,9 +56,9 @@ pub use sp_runtime::BuildStorage;
 use polkadot_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
 
 // XCM Imports
+use pallet_transaction_payment::RuntimeDispatchInfo;
 use xcm::latest::prelude::BodyId;
 use xcm_executor::XcmExecutor;
-use pallet_transaction_payment::RuntimeDispatchInfo;
 
 pub use orml_tokens;
 pub use zenlink_protocol;
@@ -408,7 +410,7 @@ impl cumulus_pallet_xcmp_queue::Config for Runtime {
 	type ControllerOriginConverter = XcmOriginToTransactDispatchOrigin;
 	type WeightInfo = ();
 	type PriceForSiblingDelivery = ();
-}	
+}
 
 impl cumulus_pallet_dmp_queue::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
