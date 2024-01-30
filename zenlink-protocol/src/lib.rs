@@ -22,14 +22,14 @@ use serde::{Deserialize, Serialize};
 
 use codec::{Decode, Encode, FullCodec};
 use frame_support::{
-	inherent::Vec,
 	pallet_prelude::*,
 	sp_runtime::SaturatedConversion,
 	traits::{
 		Currency, ExistenceRequirement, ExistenceRequirement::AllowDeath, Get, WithdrawReasons,
 	},
-	PalletId, RuntimeDebug,
+	PalletId,
 };
+use frame_system::pallet_prelude::*;
 use sp_core::U256;
 use sp_runtime::traits::{
 	AccountIdConversion, Hash, MaybeSerializeDeserialize, One, StaticLookup, Zero,
@@ -73,7 +73,6 @@ pub use pallet::*;
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
-	use frame_system::pallet_prelude::*;
 
 	/// Configure the pallet by specifying the parameters and types on which it depends.
 	#[pallet::config]
@@ -111,7 +110,6 @@ pub mod pallet {
 
 	#[pallet::pallet]
 	#[pallet::without_storage_info]
-	#[pallet::generate_store(pub(super) trait Store)]
 	pub struct Pallet<T>(_);
 
 	/// Foreign foreign storage
@@ -155,7 +153,7 @@ pub mod pallet {
 		_,
 		Twox64Concat,
 		(T::AssetId, T::AssetId),
-		PairStatus<AssetBalance, T::BlockNumber, T::AccountId>,
+		PairStatus<AssetBalance, BlockNumberFor<T>, T::AccountId>,
 		ValueQuery,
 	>;
 
@@ -178,7 +176,7 @@ pub mod pallet {
 		_,
 		Twox64Concat,
 		(T::AssetId, T::AssetId),
-		PairStatus<AssetBalance, T::BlockNumber, T::AccountId>,
+		PairStatus<AssetBalance, BlockNumberFor<T>, T::AccountId>,
 		ValueQuery,
 	>;
 
@@ -224,26 +222,9 @@ pub mod pallet {
 	}
 
 	#[pallet::genesis_build]
-	impl<T: Config> GenesisBuild<T> for GenesisConfig<T> {
+	impl<T: Config> BuildGenesisConfig for GenesisConfig<T> {
 		fn build(&self) {
 			<FeeMeta<T>>::put((&self.fee_receiver, &self.fee_point));
-		}
-	}
-
-	#[cfg(feature = "std")]
-	impl<T: Config> GenesisConfig<T> {
-		/// Direct implementation of `GenesisBuild::build_storage`.
-		///
-		/// Kept in order not to break dependency.
-		pub fn build_storage(&self) -> Result<sp_runtime::Storage, String> {
-			<Self as GenesisBuild<T>>::build_storage(self)
-		}
-
-		/// Direct implementation of `GenesisBuild::assimilate_storage`.
-		///
-		/// Kept in order not to break dependency.
-		pub fn assimilate_storage(&self, storage: &mut sp_runtime::Storage) -> Result<(), String> {
-			<Self as GenesisBuild<T>>::assimilate_storage(self, storage)
 		}
 	}
 
@@ -309,7 +290,7 @@ pub mod pallet {
 			AssetBalance,
 			AssetBalance,
 			AssetBalance,
-			T::BlockNumber,
+			BlockNumberFor<T>,
 		),
 
 		/// Claim a bootstrap pair. \[bootstrap_pair_account, claimer, receiver, asset_0, asset_1,
@@ -335,7 +316,7 @@ pub mod pallet {
 			AssetBalance,
 			AssetBalance,
 			AssetBalance,
-			T::BlockNumber,
+			BlockNumberFor<T>,
 		),
 
 		/// Refund from disable bootstrap pair. \[bootstrap_pair_account, caller, asset_0, asset_1,
@@ -489,7 +470,7 @@ pub mod pallet {
 		/// - `target`: The receiver of the foreign.
 		/// - `amount`: The amount of the foreign to transfer.
 		#[pallet::call_index(2)]
-		#[pallet::weight(1_000_000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		pub fn transfer(
 			origin: OriginFor<T>,
 			asset_id: T::AssetId,
@@ -585,7 +566,7 @@ pub mod pallet {
 			#[pallet::compact] amount_1_desired: AssetBalance,
 			#[pallet::compact] amount_0_min: AssetBalance,
 			#[pallet::compact] amount_1_min: AssetBalance,
-			#[pallet::compact] deadline: T::BlockNumber,
+			#[pallet::compact] deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			ensure!(asset_0.is_support() && asset_1.is_support(), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
@@ -627,7 +608,7 @@ pub mod pallet {
 			#[pallet::compact] amount_0_min: AssetBalance,
 			#[pallet::compact] amount_1_min: AssetBalance,
 			recipient: <T::Lookup as StaticLookup>::Source,
-			#[pallet::compact] deadline: T::BlockNumber,
+			#[pallet::compact] deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			ensure!(asset_0.is_support() && asset_1.is_support(), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
@@ -664,7 +645,7 @@ pub mod pallet {
 			#[pallet::compact] amount_out_min: AssetBalance,
 			path: Vec<T::AssetId>,
 			recipient: <T::Lookup as StaticLookup>::Source,
-			#[pallet::compact] deadline: T::BlockNumber,
+			#[pallet::compact] deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			ensure!(path.iter().all(|id| id.is_support()), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
@@ -699,7 +680,7 @@ pub mod pallet {
 			#[pallet::compact] amount_in_max: AssetBalance,
 			path: Vec<T::AssetId>,
 			recipient: <T::Lookup as StaticLookup>::Source,
-			#[pallet::compact] deadline: T::BlockNumber,
+			#[pallet::compact] deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			ensure!(path.iter().all(|id| id.is_support()), Error::<T>::UnsupportedAssetType);
 			let who = ensure_signed(origin)?;
@@ -741,7 +722,7 @@ pub mod pallet {
 			#[pallet::compact] target_supply_1: AssetBalance,
 			#[pallet::compact] capacity_supply_0: AssetBalance,
 			#[pallet::compact] capacity_supply_1: AssetBalance,
-			#[pallet::compact] end: T::BlockNumber,
+			#[pallet::compact] end: BlockNumberFor<T>,
 			rewards: Vec<T::AssetId>,
 			limits: Vec<(T::AssetId, AssetBalance)>,
 		) -> DispatchResult {
@@ -851,7 +832,7 @@ pub mod pallet {
 			asset_1: T::AssetId,
 			#[pallet::compact] amount_0_contribute: AssetBalance,
 			#[pallet::compact] amount_1_contribute: AssetBalance,
-			#[pallet::compact] deadline: T::BlockNumber,
+			#[pallet::compact] deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			let who = ensure_signed(who)?;
 
@@ -887,7 +868,7 @@ pub mod pallet {
 			recipient: <T::Lookup as StaticLookup>::Source,
 			asset_0: T::AssetId,
 			asset_1: T::AssetId,
-			#[pallet::compact] deadline: T::BlockNumber,
+			#[pallet::compact] deadline: BlockNumberFor<T>,
 		) -> DispatchResult {
 			let who = ensure_signed(origin)?;
 			let recipient = T::Lookup::lookup(recipient)?;
@@ -943,7 +924,7 @@ pub mod pallet {
 			#[pallet::compact] target_supply_1: AssetBalance,
 			#[pallet::compact] capacity_supply_0: AssetBalance,
 			#[pallet::compact] capacity_supply_1: AssetBalance,
-			#[pallet::compact] end: T::BlockNumber,
+			#[pallet::compact] end: BlockNumberFor<T>,
 			rewards: Vec<T::AssetId>,
 			limits: Vec<(T::AssetId, AssetBalance)>,
 		) -> DispatchResult {
@@ -1027,7 +1008,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(14)]
-		#[pallet::weight(100_000_000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[frame_support::transactional]
 		pub fn bootstrap_charge_reward(
 			origin: OriginFor<T>,
@@ -1061,7 +1042,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(15)]
-		#[pallet::weight(100_000_000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[frame_support::transactional]
 		pub fn bootstrap_withdraw_reward(
 			origin: OriginFor<T>,

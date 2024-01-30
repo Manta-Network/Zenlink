@@ -62,7 +62,6 @@ pub mod pallet {
 
 	#[pallet::pallet]
 	#[pallet::without_storage_info]
-	#[pallet::generate_store(pub(super) trait Store)]
 	pub struct Pallet<T>(_);
 
 	/// The next vote period id.
@@ -188,7 +187,7 @@ pub mod pallet {
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn update_admin(
 			origin: OriginFor<T>,
@@ -205,7 +204,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(1)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn initialize(
 			origin: OriginFor<T>,
@@ -241,7 +240,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(2)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn update_vote_set_window(
 			origin: OriginFor<T>,
@@ -262,7 +261,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(3)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn update_vote_duration(
 			origin: OriginFor<T>,
@@ -285,7 +284,7 @@ pub mod pallet {
 
 		#[pallet::call_index(4)]
 		/// Try to start a new period. If the current period has not expired, then it will fail.
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn update_vote_period(origin: OriginFor<T>) -> DispatchResult {
 			ensure_signed(origin)?;
@@ -294,7 +293,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(5)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn set_voteable_pools(origin: OriginFor<T>, pools: Vec<T::PoolId>) -> DispatchResult {
 			let who = ensure_signed(origin)?;
@@ -320,7 +319,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(6)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn set_non_voteable_pools(
 			origin: OriginFor<T>,
@@ -349,7 +348,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(7)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn vote(origin: OriginFor<T>, pool_id: T::PoolId, amounts: Balance) -> DispatchResult {
 			let who = ensure_signed(origin)?;
@@ -390,7 +389,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(8)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn cancel_vote(
 			origin: OriginFor<T>,
@@ -443,7 +442,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(9)]
-		#[pallet::weight(10000)]
+		#[pallet::weight(T::DbWeight::get().write)]
 		#[transactional]
 		pub fn update_pool_histroy(
 			origin: OriginFor<T>,

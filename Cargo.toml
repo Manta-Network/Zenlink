@@ -1,17 +1,72 @@
-[profile.release]
-panic = 'unwind'
-
 [workspace]
 members = [
 	"zenlink-protocol",
 	"zenlink-protocol/rpc",
+	"zenlink-protocol/rpc/runtime-api",
 	"zenlink-stable-amm",
 	"zenlink-stable-amm/rpc",
 	"zenlink-stable-amm/rpc/runtime-api",
 	"zenlink-swap-router",
 	"zenlink-vault",
 	"zenlink-gauge",
-	"example/node",
-	"example/runtime",
-	"example/primitives"
 ]
+
+resolver = "2"
+
+[workspace.dependencies]
+# Crates.io
+scale-info = { version = "2.10.0", default-features = false, features = [
+	"derive",
+] }
+serde_json = "1.0"
+serde = { version = "1.0.193", default-features = false, features = ["alloc", "derive"] }
+log = { version = "0.4.20", default-features = false }
+codec = { package = "parity-scale-codec", version = "3.6.5", default-features = false, features = [ "derive" ] }
+jsonrpsee = { version = "0.20.3", features = ["server", "macros"] }
+
+# Polkadot
+xcm = { package = "staging-xcm", git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+xcm-executor = { package = "staging-xcm-executor", git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+
+# Substrate
+frame-benchmarking = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+frame-support = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+frame-support-test = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0" }
+frame-system = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-arithmetic = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-blockchain = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-core = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-rpc = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+sp-std = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+pallet-timestamp = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+pallet-balances = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+
+# Cumulus
+cumulus-primitives-core = { git = "https://github.com/paritytech/polkadot-sdk", branch = "release-polkadot-v1.6.0", default-features = false }
+
+# orml
+orml-traits = { git = "https://github.com/manta-network/open-runtime-module-library", default-features = false, branch = "polkadot-v1.6.0" }
+orml-tokens = { package = "orml-tokens", git = "https://github.com/manta-network/open-runtime-module-library", default-features = false, branch = "polkadot-v1.6.0" }
+
+# Self dependencies
+zenlink-protocol = { path = "./zenlink-protocol", default-features = false }
+zenlink-vault = { path = "./zenlink-vault", default-features = false }
+zenlink-gauge = { path = "./zenlink-gauge", default-features = false }
+zenlink-swap-router = { path = "./zenlink-swap-router", default-features = false }
+zenlink-stable-amm = { path = "./zenlink-stable-amm", default-features = false }
+
+[profile.dev.package.backtrace]
+inherits = "release"
+
+[profile.release]
+opt-level = 3
+panic = "unwind"
+
+[profile.production]
+codegen-units = 1
+incremental = false
+inherits = "release"
+lto = true

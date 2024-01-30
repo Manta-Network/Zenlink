@@ -50,7 +50,7 @@ mod utils;
 mod weights;
 
 use frame_support::{
-	dispatch::{Codec, DispatchResult},
+	dispatch::DispatchResult,
 	pallet_prelude::*,
 	traits::UnixTime,
 	transactional, PalletId,
@@ -60,6 +60,7 @@ use sp_arithmetic::traits::{checked_pow, AtLeast32BitUnsigned, CheckedAdd, One, 
 use sp_core::U256;
 use sp_runtime::traits::{AccountIdConversion, StaticLookup};
 use sp_std::{ops::Sub, vec, vec::Vec};
+use codec::Codec;
 
 pub use pallet::*;
 use primitives::*;
