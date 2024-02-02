@@ -256,8 +256,8 @@ impl<T: Config> Pallet<T> {
 		let total_supply = T::MultiCurrency::total_issuance(pool.lp_currency_id);
 		ensure!(total_supply > Zero::zero(), Error::<T>::InsufficientLpReserve);
 		ensure!(
-			T::MultiCurrency::free_balance(pool.lp_currency_id, who) >= lp_amount
-				&& lp_amount <= total_supply,
+			T::MultiCurrency::free_balance(pool.lp_currency_id, who) >= lp_amount &&
+				lp_amount <= total_supply,
 			Error::<T>::InsufficientSupply
 		);
 		ensure!(index < pool.currency_ids.len() as u32, Error::<T>::CurrencyIndexOutRange);

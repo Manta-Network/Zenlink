@@ -17,7 +17,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::unused_unit)]
 
-#[cfg(feature = "std")]
 use serde::{Deserialize, Serialize};
 
 use codec::{Decode, Encode, FullCodec};
@@ -214,7 +213,6 @@ pub mod pallet {
 		pub fee_point: u8,
 	}
 
-	#[cfg(feature = "std")]
 	impl<T: Config> Default for GenesisConfig<T> {
 		fn default() -> Self {
 			Self { fee_receiver: None, fee_point: 5 }
@@ -513,7 +511,7 @@ pub mod pallet {
 			let pair = Self::sort_asset_id(asset_0, asset_1);
 			PairStatuses::<T>::try_mutate(pair, |status| match status {
 				Trading(_) => Err(Error::<T>::PairAlreadyExists),
-				Bootstrap(params) => {
+				Bootstrap(params) =>
 					if Self::bootstrap_disable(params) {
 						BootstrapEndStatus::<T>::insert(pair, Bootstrap((*params).clone()));
 
@@ -524,8 +522,7 @@ pub mod pallet {
 						Ok(())
 					} else {
 						Err(Error::<T>::PairAlreadyExists)
-					}
-				},
+					},
 				Disable => {
 					*status = Trading(PairMetadata {
 						pair_account: Self::pair_account_id(pair.0, pair.1),

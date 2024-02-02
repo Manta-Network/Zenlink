@@ -11,15 +11,12 @@ use scale_info::TypeInfo;
 use serde::{Deserialize, Serialize};
 
 use frame_support::{
-	dispatch::DispatchResult,
-	parameter_types, derive_impl,
-	traits::Contains,
-	PalletId,
+	derive_impl, dispatch::DispatchResult, parameter_types, traits::Contains, PalletId,
 };
 use sp_core::H256;
 use sp_runtime::{
 	traits::{BlakeTwo256, IdentityLookup},
-	RuntimeDebug, BuildStorage, DispatchError
+	BuildStorage, DispatchError, RuntimeDebug,
 };
 
 use crate as pallet_zenlink;

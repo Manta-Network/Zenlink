@@ -214,8 +214,8 @@ impl<T: Config> Pallet<T> {
 	) -> Result<Balance, DispatchError> {
 		let total_supply = T::MultiCurrency::total_issuance(meta_pool.info.lp_currency_id);
 		ensure!(
-			T::MultiCurrency::free_balance(meta_pool.info.lp_currency_id, who) >= lp_amount
-				&& lp_amount <= total_supply,
+			T::MultiCurrency::free_balance(meta_pool.info.lp_currency_id, who) >= lp_amount &&
+				lp_amount <= total_supply,
 			Error::<T>::InsufficientSupply
 		);
 		ensure!(
@@ -350,9 +350,9 @@ impl<T: Config> Pallet<T> {
 
 		let max_range = base_lp_currency_index + meta_pool.base_currencies.len();
 		ensure!(
-			currency_index_from != currency_index_to
-				&& currency_index_from < max_range
-				&& currency_index_to < max_range,
+			currency_index_from != currency_index_to &&
+				currency_index_from < max_range &&
+				currency_index_to < max_range,
 			Error::<T>::MismatchParameter
 		);
 
@@ -380,8 +380,8 @@ impl<T: Config> Pallet<T> {
 
 		let mut dx = Self::do_transfer_in(currency_from, who, &meta_pool.info.account, in_amount)?;
 		let mut dy: Balance;
-		if currency_index_from < base_lp_currency_index
-			|| currency_index_to < base_lp_currency_index
+		if currency_index_from < base_lp_currency_index ||
+			currency_index_to < base_lp_currency_index
 		{
 			let old_balances = meta_pool.info.balances.clone();
 
@@ -899,9 +899,9 @@ impl<T: Config> Pallet<T> {
 		let currency_index_to = currency_index_to;
 
 		ensure!(
-			currency_index_from != currency_index_to
-				&& currency_index_from < max_range
-				&& currency_index_to < max_range,
+			currency_index_from != currency_index_to &&
+				currency_index_from < max_range &&
+				currency_index_to < max_range,
 			Error::<T>::MismatchParameter
 		);
 

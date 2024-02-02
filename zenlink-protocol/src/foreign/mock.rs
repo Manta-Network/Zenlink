@@ -2,11 +2,11 @@
 // Licensed under Apache 2.0.
 
 //! Test utilities
-use frame_support::{parameter_types, derive_impl, PalletId};
+use frame_support::{derive_impl, parameter_types, PalletId};
 use sp_core::H256;
 use sp_runtime::{
-	BuildStorage,
 	traits::{BlakeTwo256, IdentityLookup},
+	BuildStorage,
 };
 
 use crate as pallet_zenlink;

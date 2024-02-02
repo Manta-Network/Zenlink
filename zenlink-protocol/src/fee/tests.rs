@@ -488,8 +488,8 @@ fn turn_on_protocol_fee_swap_have_fee_at_should_work() {
 
 		let lp_fee = <Test as Config>::MultiAssetsHandler::balance_of(LP_DOT_BTC, &BOB);
 
-		let alice_lp_add = (U256::from(lp_of_alice_0 + lp_fee) * U256::from(added_btc)
-			/ U256::from(reserve_1))
+		let alice_lp_add = (U256::from(lp_of_alice_0 + lp_fee) * U256::from(added_btc) /
+			U256::from(reserve_1))
 		.as_u128();
 
 		let lp_total = <Test as Config>::MultiAssetsHandler::total_supply(LP_DOT_BTC);
