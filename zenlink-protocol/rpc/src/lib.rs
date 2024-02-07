@@ -6,7 +6,11 @@
 #![allow(clippy::too_many_arguments)]
 
 use codec::Codec;
-use jsonrpsee::{core::RpcResult, proc_macros::rpc, types::error::ErrorObject};
+use jsonrpsee::{
+	core::{Error as JsonRpseeError, RpcResult},
+	proc_macros::rpc,
+	types::error::{CallError, ErrorObject},
+};
 
 use sp_api::ProvideRuntimeApi;
 use sp_blockchain::HeaderBackend;
@@ -221,6 +225,11 @@ impl From<Error> for i32 {
 }
 
 /// Converts a runtime trap into an RPC error.
-fn runtime_error_into_rpc_err(err: impl std::fmt::Display) -> ErrorObject<'static> {
-	ErrorObject::owned(Error::RuntimeError.into(), "error in zenlink pallet", Some(err.to_string()))
+fn runtime_error_into_rpc_err(err: impl std::fmt::Display) -> JsonRpseeError {
+	CallError::Custom(ErrorObject::owned(
+		Error::RuntimeError.into(),
+		"error in zenlink pallet",
+		Some(err.to_string()),
+	))
+	.into()
 }
